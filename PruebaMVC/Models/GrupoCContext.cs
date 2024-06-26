@@ -1,19 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using Microsoft.EntityFrameworkCore;
 
 namespace PruebaMVC.Models;
 
 public partial class GrupoCContext : DbContext
 {
-    public GrupoCContext()
+    private readonly IConfiguration _configuration;
+    public GrupoCContext(IConfiguration configuracion)
     {
+        this._configuration = configuracion;
+        this.OnConfiguring(new DbContextOptionsBuilder());
     }
 
-    public GrupoCContext(DbContextOptions<GrupoCContext> options)
-        : base(options)
-    {
-    }
+
 
     public virtual DbSet<Albume> Albumes { get; set; }
 
@@ -52,8 +53,10 @@ public partial class GrupoCContext : DbContext
     public virtual DbSet<VistaListum> VistaLista { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseSqlServer("server=musicagrupos.database.windows.net;database=GrupoC;user=as;password=P0t@t0P0t@t0");
+    {
+        var cadena = this._configuration.GetConnectionString("myDb1");
+        optionsBuilder.UseSqlServer(cadena);
+    }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

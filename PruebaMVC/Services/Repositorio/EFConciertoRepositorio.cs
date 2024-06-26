@@ -1,11 +1,19 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System.Drawing;
+using Microsoft.EntityFrameworkCore;
 using PruebaMVC.Models;
 
 namespace PruebaMVC.Services.Repositorio
 {
     public class EFConciertoRepositorio :IConciertosRepositorio
     {
-        private readonly GrupoCContext _context = new();
+        private readonly IConfiguration _configuration;
+        public EFConciertoRepositorio(IConfiguration Configuracion)
+        {
+            this._configuration = Configuracion;
+            this._context = new(_configuration);
+        }
+
+        private readonly GrupoCContext _context;
         public List<Concierto> DameTodos()
         {
             return _context.Conciertos.AsNoTracking().ToList();

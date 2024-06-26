@@ -9,9 +9,8 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
-var cadena1 = builder.Configuration.GetConnectionString("myDb1");
-builder.Services.AddDbContext<GrupoCContext>(
-       options => options.UseSqlServer("server=musicagrupos.database.windows.net;database=GrupoC;user=as;password=P0t@t0P0t@t0"));
+builder.Services.AddDbContext<GrupoCContext>();
+//options => options.UseSqlServer("server=musicagrupos.database.windows.net;database=GrupoC;user=as;password=P0t@t0P0t@t0"));
 builder.Services.AddScoped(typeof(IGenericRepositorio<>), typeof(EFGenericRepositorio<>));
 builder.Services.AddSingleton<ITempDataProvider, CookieTempDataProvider>();
 
