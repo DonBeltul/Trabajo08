@@ -1,0 +1,75 @@
+@model IEnumerable<PruebaMVC.Models.Usuario>
+
+@{
+    ViewData["Title"] = "Index";
+    ViewData["Asteriscos"] = "***********";
+}
+<div class="container-fluid pt-3">
+    <div class="row">
+        <div class="col-11">
+            <form asp-controller="Usuarios" asp-action="Index">
+                <p>
+                    <span class="gordete">Buscador:</span> <input type="text" name="SearchString" />
+                    <input type="submit" value="Busca" />
+                </p>
+            </form>
+        </div>
+        <div class="col-1">
+            <p>
+                <a class="gordete" asp-action="Create"><i class="fa-solid fa-circle-plus fs-3"></i></a>
+            </p>
+        </div>
+    </div>
+</div>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                <a asp-action="Index" asp-route-sortOrder="@ViewData["NombreSortParm"]">@Html.DisplayNameFor(model => model.Nombre)</a>
+            </th>
+            <th>
+                <a asp-action="Index" asp-route-sortOrder="@ViewData["EmailSortParm"]">@Html.DisplayNameFor(model => model.Email)</a>
+            </th>
+            <th>
+                 <a asp-action="Index" asp-route-sortOrder="@ViewData["ContraseñaSortParm"]">@Html.DisplayNameFor(model => model.Contraseña)</a>
+            </th>
+            <th>
+                <form asp-action="Index" asp-controller="Usuarios">
+                    <button class="btn btn-primary" type="submit" value="Mostrar" name="mostrar"><i class="bi bi-eye"></i></button>
+                    <button class="btn btn-primary" type="submit" value="Ocultar" name="mostrar"><i class="bi bi-eye-slash"></i></button>
+                </form>
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Nombre)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Email)
+                </td>
+                <td>
+                    @{
+                        if (ViewData["Esconder"].Equals("Si"))
+                        {
+                            @ViewData["Asteriscos"]
+                            ;
+                        }
+                        else
+                        {
+                            @Html.DisplayFor(modelItem => item.Contraseña)
+                        }
+                    }
+                </td>
+                <td>
+                <a asp-action="Edit" asp-route-id="@item.Id"><i class="fa-solid fa-pen"></i></a> 
+                <a asp-action="Details" asp-route-id="@item.Id"><i class="fa-solid fa-eye"></i></a> 
+                <a asp-action="Delete" asp-route-id="@item.Id"><i class="fa-solid fa-trash"></i></a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
