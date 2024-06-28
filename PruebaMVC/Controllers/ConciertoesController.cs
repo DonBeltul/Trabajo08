@@ -107,10 +107,6 @@ namespace PruebaMVC.Controllers
         // GET: Conciertoes/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
 
             var concierto = await context.DameUno((int)id);
             if (concierto == null)
@@ -185,7 +181,7 @@ namespace PruebaMVC.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        private async Task<bool> ConciertoExists(int id)
+        public async Task<bool> ConciertoExists(int id)
         {
             var vista = await context.DameTodos();
             return vista.Exists(e => e.Id == id);

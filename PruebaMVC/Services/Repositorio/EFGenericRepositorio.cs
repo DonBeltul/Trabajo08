@@ -42,7 +42,9 @@ namespace PruebaMVC.Services.Repositorio
 
         public async Task Modificar(int Id, T element)
         {
+
             _context.Set<T>().Update(element);
+          
             await _context.SaveChangesAsync();
         }
 
