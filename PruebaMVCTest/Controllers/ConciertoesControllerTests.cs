@@ -352,7 +352,7 @@ namespace PruebaMVC.Controllers.Tests
         {
             var lista = (await controller.Index("", "") as ViewResult).Model as IEnumerable<Concierto>;
             lista = lista.Where(x => x.Titulo.Equals("Prueba"));
-            int id = lista.FirstOrDefault().Id + 10;
+            int id = lista.FirstOrDefault().Id + 11;
             Assert.AreEqual(true, await controller.ConciertoExists(1));
             Assert.AreEqual(false, await controller.ConciertoExists(id));
         }
