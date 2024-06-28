@@ -15,7 +15,7 @@ namespace PruebaMVC.Controllers
 
 
     {
-        private IConfiguration Configuration;
+       
         // GET: Albumes
         public async Task<IActionResult> Index(string sortOrder, string searchString)
         {

@@ -1,4 +1,5 @@
 ﻿using System.Linq.Expressions;
+using Microsoft.Build.Framework;
 using Microsoft.EntityFrameworkCore;
 using PruebaMVC.Models;
 
@@ -6,7 +7,14 @@ namespace PruebaMVC.Services.Repositorio
 {
     public class EFGenericRepositorio<T> : IGenericRepositorio<T> where T : class
     {
-        private readonly GrupoCContext _context = new();
+        private readonly IConfiguration _configuration;
+
+        public EFGenericRepositorio(IConfiguration configuracion)
+        {
+            _context = new(configuracion);
+        }
+
+        private readonly GrupoCContext _context;
         public async Task<List<T>> DameTodos()
         {
             return await _context.Set<T>().ToListAsync();
