@@ -43,6 +43,7 @@ namespace PruebaMVC.Services.Repositorio
         public async Task Modificar(int Id, T element)
         {
             _context.Entry(element).State = EntityState.Modified;
+            //_context.Update(element);
             await _context.SaveChangesAsync();
         }
 
