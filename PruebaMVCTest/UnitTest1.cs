@@ -24,9 +24,6 @@ namespace PruebaMVCTest
             GrupoCContext contexto = new(config);
             Assert.AreEqual(contexto.Albumes.Count(),5);
             Assert.IsNotNull(contexto);
-
-
         }
-       
     }
 }
