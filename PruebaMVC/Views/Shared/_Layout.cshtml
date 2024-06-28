@@ -159,7 +159,7 @@
             $('.carouselImagen').css("font-size", ($('.carouselImagen').width() / 250) + 'em');
             $('#Filtro').css("height", ($(window).height() - 50 - $('.elIcono').height()) + "px");
             // $('#tituloCarousel').css("font-size", (($('#carouselImagen').width() / 500) < 1.3 ? 1.3 : $('#carouselImagen').width() / 900) + 'em');
-    }
+        }
     </script>
     <script>
         $('.carousel-item').eq(0).addClass("active");
@@ -174,7 +174,7 @@
             if (posicion != 0) {
                 $('.carousel-item').eq(posicion).removeClass('active');
                 $('.carousel-item').eq(posicion - 1).addClass('active');
-            }else {
+            } else {
                 $('.carousel-item').eq(0).removeClass('active');
                 $('.carousel-item').eq($('.carousel-item').length - 1).addClass('active');
             }
@@ -187,7 +187,7 @@
             if (posicion != $('.carousel-item').length - 1) {
                 $('.carousel-item').eq(posicion).removeClass('active');
                 $('.carousel-item').eq(posicion + 1).addClass('active');
-            }else {
+            } else {
                 $('.carousel-item').eq($('.carousel-item').length - 1).removeClass('active');
                 $('.carousel-item').eq(0).addClass('active');
             }
@@ -200,19 +200,27 @@
         $(".filtroIcono").css({
             "position": "fixed",
             "left": "0px",
-            "top":"50px",
+            "top": "50px",
             "z-index": "2"
         });
-        $('.botonFiltro').on('click', function() {
+        $('.botonFiltro').on('click', function () {
             if ($('#Filtro').hasClass("esconder")) {
                 $('#Filtro').removeClass("esconder");
                 $('#Filtro').addClass("d-flex");
                 $(".botonFiltro").addClass('botonFiltroClickado');
-            }else {
+                $('#errorPrecio').removeClass("esconder");
+                $('#errorFecha').removeClass("esconder");
+            } else {
                 $(".botonFiltro").removeClass('botonFiltroClickado');
                 $('#Filtro').addClass("esconder");
                 $("#Filtro").removeClass('d-flex');
+                $('#errorPrecio').addClass("esconder");
+                $('#errorFecha').addClass("esconder");
             }
+            $(".filtroPrecio").css({
+                "left": $('#filtroPrecioConcierto').offset().left,
+                "top": $('#filtroPrecioConcierto').offset().top + $('#filtroPrecioConcierto').height() + 10,
+            });
         });
         $('#x').on('click', function () {
             if ($('.botonFiltro').hasClass('esconder')) {
@@ -226,6 +234,9 @@
         });
     </script>
     <script>
+        $('#errorPrecio').hide();
+        $('#errorFecha').hide();
+
         $('.tarjeta').addClass('filtrado');
         $('#filtroNombreConcierto').on('change', function () {
             $('.tarjeta').addClass('filtrado');
@@ -255,14 +266,43 @@
             paginacion();
         });
         $('#filtroPrecioConcierto').on('change', function () {
-            $('.tarjeta').addClass('filtrado');
-            filtroPorTitulo();
-            filtroPorLugar();
-            filtroPorNombreGrupo();
-            filtroPorPrecio();
-            filtroPorFecha();
-            paginacion();
+            precioFiltra();
         });
+        $('#igualdadPrecio').on('change', function () {
+            precioFiltra();
+        });
+        function precioFiltra() {
+            if (validarPrecio()) {
+                $('.tarjeta').addClass('filtrado');
+                filtroPorTitulo();
+                filtroPorLugar();
+                filtroPorNombreGrupo();
+                filtroPorPrecio();
+                filtroPorFecha();
+                paginacion();
+                $('#errorPrecio').hide();
+            } else {
+                $('#errorPrecio').show();
+                $("#errorPrecio").css({
+                    "position": "absolute",
+                    "left": $('#filtroPrecioConcierto').offset().left,
+                    "top": $('#filtroPrecioConcierto').offset().top + $('#filtroPrecioConcierto').height() + 10,
+                    "z-index": "10"
+                });
+            }
+            $(window).on('resize', function () {
+                $("#errorPrecio").css({
+                    "left": $('#filtroPrecioConcierto').offset().left,
+                    "top": $('#filtroPrecioConcierto').offset().top + $('#filtroPrecioConcierto').height() + 10,
+                });
+            });
+            $(window).on('scroll', function () {
+                $("#errorPrecio").css({
+                    "left": $('#filtroPrecioConcierto').offset().left,
+                    "top": $('#filtroPrecioConcierto').offset().top + $('#filtroPrecioConcierto').height() + 10,
+                });
+            });
+        }
         $('#filtroFechaConcierto').on('change', function () {
             $('.tarjeta').addClass('filtrado');
             filtroPorTitulo();
@@ -274,6 +314,7 @@
         });
         $('#ConciertoReset').on('click', function () {
             $('.tarjeta').addClass('filtrado');
+            $('#errorPrecio').hide();
             paginacion();
         });
         function filtroPorTitulo() {
@@ -290,7 +331,7 @@
                         $('.tarjeta').eq(i).removeClass('filtrado');
                     }
                 }
-            } 
+            }
         }
         function filtroPorNombreGrupo() {
             if (!($('#valoresGrupo').val() == "Todos")) {
@@ -302,15 +343,15 @@
             }
         }
         function filtroPorPrecio() {
-            switch($('#igualdadPrecio').val()) {
-                case "mayor": 
+            switch ($('#igualdadPrecio').val()) {
+                case "mayor":
                     for (let i = 0; i < $('.tarjeta').length; i++) {
                         if (!(parseFloat($('.precio').eq(i).text()) > parseFloat($('#filtroPrecioConcierto').val()))) {
                             $('.tarjeta').eq(i).removeClass('filtrado');
                         }
                     }
                     break;
-                case "igual": 
+                case "igual":
                     for (let i = 0; i < $('.tarjeta').length; i++) {
                         if (!(parseFloat($('.precio').eq(i).text()) == parseFloat($('#filtroPrecioConcierto').val()))) {
                             $('.tarjeta').eq(i).removeClass('filtrado');
@@ -353,6 +394,13 @@
                 default: break;
             }
         }
+        function validarPrecio() {
+            let regex = new RegExp('([0-9]{1,4}([.][0-9]{1,2})?)');
+            if (regex.test($('#filtroPrecioConcierto').val())) {
+                return true;
+            }
+            return false;
+        }
         function createDate(fecha) {
             let arrayFecha = fecha.split('/');
             return new Date(arrayFecha[1] + "/" + arrayFecha[0] + "/" + arrayFecha[2]);
@@ -368,22 +416,21 @@
         function paginacion() {
             if ($('#contenedorTarjetas .tarjeta').eq(0).length > 0) {
                 $('.paginas').html('');
-                $('.paginas').css('margin-left', $('#contenedorTarjetas .tarjeta').eq(0).offset().left + 'px');
-                for (let i = 0; i < ($('#contenedorTarjetas .tarjeta').filter('.filtrado').length / 8); i++) {
-                    $('.paginas').append(`<button class="pagina" style="width: 50px;height:50px;background-color:red;color:white;margin-right:8px;">${i}</button>`);
+                for (let i = 0; i < $('#contenedorTarjetas .tarjeta').filter('.filtrado').length / 8; i++) {
+                    $('.paginas').append(`<button class="pagina" style="width: 50px;height:50px;background-color:red;color:white;margin-right:8px;">${i + 1}</button>`);
                 }
                 $('.paginas .pagina').eq(0).css('background-color', 'black');
                 $('.tarjeta').hide();
                 for (let i = 0; i < 8; i++) {
                     $('.tarjeta').filter('.filtrado').eq(i).show();
                 }
-
-                $('.paginas .pagina').on('click',irAPagina);
-            } 
+                if ($('#contenedorTarjetas .tarjeta').filter('.filtrado').length > 0) $('.paginas').css('margin-left', $('#contenedorTarjetas .tarjeta').filter('.filtrado').eq(0).offset().left + 'px');
+                $('.paginas .pagina').on('click', irAPagina);
+            }
             function irAPagina() {
                 $('.tarjeta').hide();
-                for (let i = (parseInt($(this).text())) * 8; i < (parseInt($(this).text()) + 1) * 8; i++) {
-                        $('.tarjeta').filter('.filtrado').eq(i).show();
+                for (let i = (parseInt($(this).text()) - 1) * 8; i < (parseInt($(this).text())) * 8; i++) {
+                    $('.tarjeta').filter('.filtrado').eq(i).show();
                 }
                 $('.paginas .pagina').css('background-color', 'red');
                 $(this).css('background-color', 'black');
