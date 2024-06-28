@@ -176,28 +176,6 @@ namespace PruebaMVC.Controllers.Tests
         }
 
         [TestMethod()]
-        public async Task EDetailsTest()
-        {
-            var resultado = await controller.Details(1) as ViewResult;
-            var concieroId1 = resultado.Model as Concierto;
-
-            Assert.IsInstanceOfType(concieroId1, typeof(Concierto));
-            Assert.AreEqual("Zaragoza", concieroId1.Lugar);
-
-            var lista = (await controller.Index("", "") as ViewResult).Model as IEnumerable<Concierto>;
-            lista = lista.Where(x => x.Titulo.Equals("Prueba"));
-            int id = lista.FirstOrDefault().Id + 10;
-
-            try
-            {
-                var error = (await controller.Details(id) as ViewResult).Model as Concierto;
-                Assert.Fail();
-            } catch (Exception ex) {
-                Console.WriteLine("Error capturado en Test Details");
-            }
-        }
-
-        [TestMethod()]
         public void DCreateTest()
         {
             var resultado = controller.Create() as ViewResult;
@@ -218,8 +196,7 @@ namespace PruebaMVC.Controllers.Tests
             await controller.Create(concierto);
 
             var lista = (await controller.Index("", "") as ViewResult).Model as IEnumerable<Concierto>;
-            lista = lista.Where(x => x.Titulo.Equals("Prueba"));
-            int id = lista.FirstOrDefault().Id;
+            int id = lista.FirstOrDefault(x => x.Lugar.Equals("Prueba")).Id;
 
             var resultado = await controller.Details(id) as ViewResult;
             Assert.IsInstanceOfType(resultado.Model as Concierto, typeof(Concierto));
@@ -227,6 +204,29 @@ namespace PruebaMVC.Controllers.Tests
             Assert.AreEqual("Prueba", (resultado.Model as Concierto).Lugar);
             Assert.AreEqual("Prueba", (resultado.Model as Concierto).Titulo);
             Assert.AreEqual(30, (resultado.Model as Concierto).Precio);
+        }
+
+        [TestMethod()]
+        public async Task EDetailsTest()
+        {
+            var resultado = await controller.Details(1) as ViewResult;
+            var concieroId1 = resultado.Model as Concierto;
+
+            Assert.IsInstanceOfType(concieroId1, typeof(Concierto));
+            Assert.AreEqual("Zaragoza", concieroId1.Lugar);
+
+            var lista = (await controller.Index("", "") as ViewResult).Model as IEnumerable<Concierto>;
+            int id = lista.FirstOrDefault(x => x.Lugar.Equals("Prueba")).Id + 10;
+
+            try
+            {
+                var error = (await controller.Details(id) as ViewResult).Model as Concierto;
+                Assert.Fail();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error capturado en Test Details");
+            }
         }
 
         [TestMethod()]
@@ -239,8 +239,7 @@ namespace PruebaMVC.Controllers.Tests
             Assert.AreEqual("Zaragoza", concieroId1.Lugar);
 
             var lista = (await controller.Index("", "") as ViewResult).Model as IEnumerable<Concierto>;
-            lista = lista.Where(x => x.Titulo.Equals("Prueba"));
-            int id = lista.FirstOrDefault().Id + 10;
+            int id = lista.FirstOrDefault(x => x.Lugar.Equals("Prueba")).Id + 10;
 
             try
             {
@@ -276,8 +275,7 @@ namespace PruebaMVC.Controllers.Tests
             //Assert.AreEqual(253, (resultado.Model as Concierto).Precio);
 
             var lista = (await controller.Index("", "") as ViewResult).Model as IEnumerable<Concierto>;
-            lista = lista.Where(x => x.Lugar.Equals("Prueba"));
-            int id = lista.FirstOrDefault().Id;
+            int id = lista.FirstOrDefault(x => x.Lugar.Equals("Prueba")).Id;
 
             Concierto concierto2 = new Concierto();
 
@@ -298,6 +296,15 @@ namespace PruebaMVC.Controllers.Tests
         }
 
         [TestMethod()]
+        public async Task ExistTest()
+        {
+            var lista = (await controller.Index("", "") as ViewResult).Model as IEnumerable<Concierto>;
+            int id = lista.FirstOrDefault(x => x.Lugar.Equals("Prueba")).Id + 11;
+            Assert.AreEqual(true, await controller.ConciertoExists(1));
+            Assert.AreEqual(false, await controller.ConciertoExists(id));
+        }
+
+        [TestMethod()]
         public async Task HDeleteTest()
         {
             var resultado = await controller.Delete(1) as ViewResult;
@@ -307,8 +314,7 @@ namespace PruebaMVC.Controllers.Tests
             Assert.AreEqual("Zaragoza", concieroId1.Lugar);
 
             var lista = (await controller.Index("", "") as ViewResult).Model as IEnumerable<Concierto>;
-            lista = lista.Where(x => x.Titulo.Equals("Prueba"));
-            int id = lista.FirstOrDefault().Id + 10;
+            int id = lista.FirstOrDefault(x => x.Lugar.Equals("Prueba")).Id + 10;
 
             try
             {
@@ -325,8 +331,7 @@ namespace PruebaMVC.Controllers.Tests
         public async Task IDeleteConfirmedTest()
         {
             var lista = (await controller.Index("", "") as ViewResult).Model as IEnumerable<Concierto>;
-            lista = lista.Where(x => x.Lugar.Equals("Prueba"));
-            int id = lista.FirstOrDefault().Id;
+            int id = lista.FirstOrDefault(x => x.Lugar.Equals("Prueba")).Id;
 
             var resultado = await controller.Details(id) as ViewResult;
             var concieroId1 = resultado.Model as Concierto;
@@ -346,16 +351,5 @@ namespace PruebaMVC.Controllers.Tests
 
             }
         }
-
-        [TestMethod()]
-        public async Task ExistTest()
-        {
-            var lista = (await controller.Index("", "") as ViewResult).Model as IEnumerable<Concierto>;
-            lista = lista.Where(x => x.Titulo.Equals("Prueba"));
-            int id = lista.FirstOrDefault().Id + 11;
-            Assert.AreEqual(true, await controller.ConciertoExists(1));
-            Assert.AreEqual(false, await controller.ConciertoExists(id));
-        }
-
     }
 }
