@@ -17,6 +17,23 @@ namespace PruebaMVC.Controllers
         private const string DataConciertos = "ConciertosId";
         private const string DataComboTitulo = "Titulo";
 
+        public IGenericRepositorio<CancionesConcierto>  getCancionesConciertoContext()
+        {
+            return context;
+        }
+        public IGenericRepositorio<Cancione> getCancionesoContext()
+        {
+            return contextCancione;
+        }
+        public IGenericRepositorio<Concierto> getConciertoContext()
+        {
+            return contextConcierto;
+        }
+        public IGenericRepositorio<VistaCancionConcierto> getVistaCancionesConciertoContext()
+        {
+            return contextVista;
+        }
+
         // GET: CancionesConciertoes
         public async Task<IActionResult> Index(string sortOrder)
         {
@@ -88,11 +105,7 @@ namespace PruebaMVC.Controllers
         // GET: CancionesConciertoes/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
+            
             var cancionesConcierto = await context.DameUno((int)id);
 
             var vista = await contextVista.DameTodos();
@@ -147,11 +160,6 @@ namespace PruebaMVC.Controllers
         // GET: CancionesConciertoes/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
             var vista = await contextVista.DameTodos();
             var cancionesConcierto = vista.AsParallel().FirstOrDefault(m => m.Id == id);
             if (cancionesConcierto == null)
@@ -173,7 +181,7 @@ namespace PruebaMVC.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        private async Task<bool> CancionesConciertoExists(int id)
+        public async Task<bool> CancionesConciertoExists(int id)
         {
             var vista = await context.DameTodos();
             return vista.AsParallel().Any(e => e.Id == id);

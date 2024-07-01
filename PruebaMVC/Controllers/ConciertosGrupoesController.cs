@@ -19,6 +19,23 @@ namespace PruebaMVC.Controllers
         private const string DataComboTitulo = "Titulo";
         private const string DataComboNombre = "Nombre";
 
+        public IGenericRepositorio<ConciertosGrupo> getGrupoConciertoContext()
+        {
+            return context;
+        }
+        public IGenericRepositorio<Grupo> getGrupoContext()
+        {
+            return contextGrupo;
+        }
+        public IGenericRepositorio<Concierto> getConciertoContext()
+        {
+            return contextConcierto;
+        }
+        public IGenericRepositorio<VistaConciertosGrupo> getVistaGrupoConciertoContext()
+        {
+            return contextVista;
+        }
+
         // GET: ConciertosGrupoes
         public async Task<IActionResult> Index(string sortOrder)
         {
@@ -177,7 +194,7 @@ namespace PruebaMVC.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        private async Task<bool> ConciertosGrupoExists(int id)
+        public async Task<bool> ConciertosGrupoExists(int id)
         {
             var vista = await context.DameTodos();
             return vista.AsParallel().Any(e => e.Id == id);
