@@ -11,7 +11,7 @@ using PruebaMVC.Controllers;
 using Microsoft.Extensions.Configuration;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
-namespace PruebaMVCTest
+namespace PruebaMVCTest.Controllers
 {
     [TestClass]
     public class ListasControllerTest
@@ -24,7 +24,7 @@ namespace PruebaMVCTest
                 .Build();
             return config;
         }
-        private ListasController controlador = new ListasController(new EFGenericRepositorio<Lista>(InitConfiguration()), 
+        private ListasController controlador = new ListasController(new EFGenericRepositorio<Lista>(InitConfiguration()),
             new EFGenericRepositorio<Usuario>(InitConfiguration()));
         public EFGenericRepositorio<Lista> contexto = new EFGenericRepositorio<Lista>(InitConfiguration());
         [TestMethod()]
@@ -34,7 +34,7 @@ namespace PruebaMVCTest
             Assert.IsNotNull(result);
             Assert.IsNull(result.ViewName);
             Assert.IsNotNull(result.ViewData.Model);
-            var listaLista= result.ViewData.Model as List<Lista>;
+            var listaLista = result.ViewData.Model as List<Lista>;
             Assert.IsNotNull(listaLista);
             Assert.AreEqual(6, listaLista.Count);
         }
@@ -54,7 +54,7 @@ namespace PruebaMVCTest
         [TestMethod()]
         public void CreateTest()
         {
-            var result =controlador.Create().Result as ViewResult;
+            var result = controlador.Create().Result as ViewResult;
             Assert.IsNotNull(result);
             Assert.IsNull(result.ViewName);
             Assert.IsInstanceOfType(result.ViewData["UsuarioId"], typeof(SelectList));
@@ -63,7 +63,7 @@ namespace PruebaMVCTest
         [TestMethod()]
         public async Task CreateTest1()
         {
-            Lista ListaValido = new() { Nombre = "PruebaTest", UsuarioId = 1};
+            Lista ListaValido = new() { Nombre = "PruebaTest", UsuarioId = 1 };
             await controlador.Create(ListaValido);
             var ListaCreada = contexto.DameTodos().Result.FirstOrDefault(x => x.Nombre == "PruebaTest");
             Assert.IsNotNull(ListaCreada);
@@ -87,7 +87,7 @@ namespace PruebaMVCTest
             var ListaCreada = contexto.DameTodos().Result.FirstOrDefault(x => x.Nombre == "PruebaTest");
             ListaCreada.Nombre = "PruebaTest2";
             ListaCreada.UsuarioId = 2;
-            await controlador.Edit(ListaCreada.Id,ListaCreada);
+            await controlador.Edit(ListaCreada.Id, ListaCreada);
             var ListaModificada = contexto.DameTodos().Result.FirstOrDefault(x => x.Nombre == "PruebaTest2");
             Assert.IsNotNull(ListaModificada);
             Assert.AreEqual("PruebaTest2", ListaModificada.Nombre);

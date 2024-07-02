@@ -11,7 +11,7 @@ using PruebaMVC.Controllers;
 using Microsoft.Extensions.Configuration;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
-namespace PruebaMVCTest
+namespace PruebaMVCTest.Controllers
 {
     [TestClass]
     public class CancionesControllerTest
@@ -63,7 +63,7 @@ namespace PruebaMVCTest
         [TestMethod()]
         public async Task CreateTest1()
         {
-            Cancione CancionValida = new() { Titulo = "CancionTest", Genero = "GeneroPrueba", Fecha = new DateOnly(2005,10,07), AlbumesId =7, UrlVideo = ""};
+            Cancione CancionValida = new() { Titulo = "CancionTest", Genero = "GeneroPrueba", Fecha = new DateOnly(2005, 10, 07), AlbumesId = 7, UrlVideo = "" };
             await controlador.Create(CancionValida);
             var CancionCreada = contexto.DameTodos().Result.FirstOrDefault(x => x.Titulo == "CancionTest");
             Assert.IsNotNull(CancionCreada);
