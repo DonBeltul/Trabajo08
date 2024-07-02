@@ -176,7 +176,7 @@ namespace PruebaMVC.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        private async Task<bool> CancioneExists(int id)
+        public async Task<bool> CancioneExists(int id)
         {
             var vista = await context.DameTodos();
             return vista.Exists(e => e.Id == id);
