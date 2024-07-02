@@ -5,7 +5,7 @@ using PruebaMVC.Controllers;
 using Microsoft.Extensions.Configuration;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
-namespace PruebaMVCTest
+namespace PruebaMVCTest.Controllers
 {
     [TestClass]
     public class ListasCancionesControllerTest
@@ -60,7 +60,7 @@ namespace PruebaMVCTest
         [TestMethod()]
         public async Task CreateTest1()
         {
-            ListasCancione ListaCancioneValido = new() {ListasId = 1, CancionesId = 2};
+            ListasCancione ListaCancioneValido = new() { ListasId = 1, CancionesId = 2 };
             await controlador.Create(ListaCancioneValido);
             var listaCancioneCreada = contexto.DameTodos().Result.FirstOrDefault(x => x.ListasId == 1 && x.CancionesId == 2);
             Assert.IsNotNull(listaCancioneCreada);

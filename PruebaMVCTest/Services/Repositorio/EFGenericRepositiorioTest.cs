@@ -2,7 +2,7 @@
 using PruebaMVC.Models;
 using PruebaMVC.Services.Repositorio;
 
-namespace PruebaMVCTest
+namespace PruebaMVCTest.Services.Repositorio
 {
     [TestClass]
     public class EFGenericRepositiorioTest
@@ -28,10 +28,10 @@ namespace PruebaMVCTest
                 new Usuario(){Id = 2, Nombre = "Majose", Email = "mjo@gmail.com",Contraseña = "mariajose"},
                 new Usuario(){Id = 3, Nombre = "Jose María", Email = "joma@gmail.com",Contraseña = "chema"},
                 new Usuario(){Id = 5, Nombre = "Anggeld", Email = "angd@gmail.com",Contraseña = "anggeld"}
-                
+
             };
             Assert.IsNotNull(should);
-            Assert.AreEqual(expected.Count(),should.Count());
+            Assert.AreEqual(expected.Count(), should.Count());
         }
         [TestMethod]
         public async Task DameUnoTest()
@@ -40,23 +40,23 @@ namespace PruebaMVCTest
             var expected = new Usuario() { Id = 1, Nombre = "Francisco", Email = "frtrj@gmail.com", Contraseña = "franchesco" };
 
             Assert.IsNotNull(should);
-            Assert.AreEqual(expected.Id,should.Id);
+            Assert.AreEqual(expected.Id, should.Id);
         }
 
         [TestMethod]
         public async Task AgregarModificarYBorrarTest()
         {
             //Agregar
-            Usuario usuario = new()  { Nombre = "Prueba", Email = "fake@gmail.com", Contraseña = "prueba" } ;
+            Usuario usuario = new() { Nombre = "Prueba", Email = "fake@gmail.com", Contraseña = "prueba" };
             Assert.IsNotNull(usuario);
             await repositorio.Agregar(usuario);
-            Assert.AreEqual(usuario,await repositorio.DameUno(usuario.Id));
-            
+            Assert.AreEqual(usuario, await repositorio.DameUno(usuario.Id));
+
             //Modificar
-            Assert.AreEqual("Prueba",usuario.Nombre);
+            Assert.AreEqual("Prueba", usuario.Nombre);
             usuario.Nombre = "PruebaMod";
             await repositorio.Modificar(usuario.Id, usuario);
-            Assert.AreEqual("PruebaMod",usuario.Nombre);
+            Assert.AreEqual("PruebaMod", usuario.Nombre);
 
             //Borrar
             await repositorio.Borrar(usuario.Id);
