@@ -10,6 +10,7 @@ using Microsoft.Extensions.Configuration.Ini;
 using PruebaMVC.Controllers;
 using Microsoft.Extensions.Configuration;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using DateOnly = System.DateOnly;
 
 namespace PruebaMVCTest.Controllers
 {
@@ -37,6 +38,62 @@ namespace PruebaMVCTest.Controllers
             var listaCancione = result.ViewData.Model as IEnumerable<VistaCancione>;
             Assert.IsNotNull(listaCancione);
             Assert.AreEqual(6, listaCancione.Count());
+
+            var resultadoDesc = controlador.Index("titulo_desc", "").Result as ViewResult;
+            Assert.AreEqual("You and me", (resultadoDesc.Model as IEnumerable<VistaCancione>).ElementAt(0).Titulo);
+            Assert.AreEqual("Trois", (resultadoDesc.Model as IEnumerable<VistaCancione>).ElementAt(1).Titulo);
+            Assert.AreEqual("Take Over", (resultadoDesc.Model as IEnumerable<VistaCancione>).ElementAt(2).Titulo);
+            Assert.IsInstanceOfType(resultadoDesc.Model as IEnumerable<VistaCancione>, typeof(IEnumerable<VistaCancione>));
+            Assert.IsNotNull(resultadoDesc.Model as IEnumerable<VistaCancione>);
+            Assert.AreEqual(6, (resultadoDesc.Model as IEnumerable<VistaCancione>).Count());
+
+            var resultadoGenero =  controlador.Index("Genero", "").Result as ViewResult;
+            Assert.AreEqual("Funk", (resultadoGenero.Model as IEnumerable<VistaCancione>).ElementAt(0).Genero);
+            Assert.AreEqual("GeneroPrueba", (resultadoGenero.Model as IEnumerable<VistaCancione>).ElementAt(1).Genero);
+            Assert.AreEqual("Jazz", (resultadoGenero.Model as IEnumerable<VistaCancione>).ElementAt(2).Genero);
+            Assert.IsInstanceOfType(resultadoGenero.Model as IEnumerable<VistaCancione>, typeof(IEnumerable<VistaCancione>));
+            Assert.IsNotNull(resultadoGenero.Model as IEnumerable<VistaCancione>);
+            Assert.AreEqual(6, (resultadoGenero.Model as IEnumerable<VistaCancione>).Count());
+
+            var resultadoGeneroDesc = controlador.Index("genero_desc", "").Result as ViewResult;
+            Assert.AreEqual("Rock", (resultadoGeneroDesc.Model as IEnumerable<VistaCancione>).ElementAt(0).Genero);
+            Assert.AreEqual("Pop", (resultadoGeneroDesc.Model as IEnumerable<VistaCancione>).ElementAt(1).Genero);
+            Assert.AreEqual("Moderno", (resultadoGeneroDesc.Model as IEnumerable<VistaCancione>).ElementAt(2).Genero);
+            Assert.IsInstanceOfType(resultadoGeneroDesc.Model as IEnumerable<VistaCancione>, typeof(IEnumerable<VistaCancione>));
+            Assert.IsNotNull(resultadoGeneroDesc.Model as IEnumerable<VistaCancione>);
+            Assert.AreEqual(6, (resultadoGeneroDesc.Model as IEnumerable<VistaCancione>).Count());
+
+            var resultadoFecha = controlador.Index("Fecha", "").Result as ViewResult;
+            Assert.AreEqual(new DateOnly(1979, 01 ,01), (resultadoFecha.Model as IEnumerable<VistaCancione>).ElementAt(0).Fecha);
+            Assert.AreEqual(new DateOnly(1983, 05, 31), (resultadoFecha.Model as IEnumerable<VistaCancione>).ElementAt(1).Fecha);
+            Assert.AreEqual(new DateOnly(1999, 02, 03), (resultadoFecha.Model as IEnumerable<VistaCancione>).ElementAt(2).Fecha);
+            Assert.IsInstanceOfType(resultadoFecha.Model as IEnumerable<VistaCancione>, typeof(IEnumerable<VistaCancione>));
+            Assert.IsNotNull(resultadoFecha.Model as IEnumerable<VistaCancione>);
+            Assert.AreEqual(6, (resultadoFecha.Model as IEnumerable<VistaCancione>).Count());
+
+            var resultadoFechaDesc = controlador.Index("fecha_desc", "").Result as ViewResult;
+            Assert.AreEqual(new DateOnly(2021, 03, 24), (resultadoFechaDesc.Model as IEnumerable<VistaCancione>).ElementAt(0).Fecha);
+            Assert.AreEqual(new DateOnly(2005, 10, 07), (resultadoFechaDesc.Model as IEnumerable<VistaCancione>).ElementAt(1).Fecha);
+            Assert.AreEqual(new DateOnly(2001, 08, 12), (resultadoFechaDesc.Model as IEnumerable<VistaCancione>).ElementAt(2).Fecha);
+            Assert.IsInstanceOfType(resultadoFechaDesc.Model as IEnumerable<VistaCancione>, typeof(IEnumerable<VistaCancione>));
+            Assert.IsNotNull(resultadoFechaDesc.Model as IEnumerable<VistaCancione>);
+            Assert.AreEqual(6, (resultadoFechaDesc.Model as IEnumerable<VistaCancione>).Count());
+
+            var resultadoAlbumes = controlador.Index("Albumes", "").Result as ViewResult;
+            Assert.AreEqual("Highway to Hell", (resultadoAlbumes.Model as IEnumerable<VistaCancione>).ElementAt(0).TituloAlbum);
+            Assert.AreEqual("Highway to Hell", (resultadoAlbumes.Model as IEnumerable<VistaCancione>).ElementAt(1).TituloAlbum);
+            Assert.AreEqual("Master of Puppets", (resultadoAlbumes.Model as IEnumerable<VistaCancione>).ElementAt(2).TituloAlbum);
+            Assert.IsInstanceOfType(resultadoAlbumes.Model as IEnumerable<VistaCancione>, typeof(IEnumerable<VistaCancione>));
+            Assert.IsNotNull(resultadoAlbumes.Model as IEnumerable<VistaCancione>);
+            Assert.AreEqual(6, (resultadoAlbumes.Model as IEnumerable<VistaCancione>).Count());
+
+            var resultadoAlbumesDesc = controlador.Index("albumes_desc", "").Result as ViewResult;
+            Assert.AreEqual("Vivir para Contarlo", (resultadoAlbumesDesc.Model as IEnumerable<VistaCancione>).ElementAt(0).TituloAlbum);
+            Assert.AreEqual("Sultans of Swing", (resultadoAlbumesDesc.Model as IEnumerable<VistaCancione>).ElementAt(1).TituloAlbum);
+            Assert.AreEqual("Nevermind", (resultadoAlbumesDesc.Model as IEnumerable<VistaCancione>).ElementAt(2).TituloAlbum);
+            Assert.IsInstanceOfType(resultadoAlbumesDesc.Model as IEnumerable<VistaCancione>, typeof(IEnumerable<VistaCancione>));
+            Assert.IsNotNull(resultadoAlbumesDesc.Model as IEnumerable<VistaCancione>);
+            Assert.AreEqual(6, (resultadoAlbumesDesc.Model as IEnumerable<VistaCancione>).Count());
         }
 
         [TestMethod()]
