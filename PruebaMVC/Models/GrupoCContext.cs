@@ -55,7 +55,13 @@ public partial class GrupoCContext : DbContext
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
         var cadena = this._configuration.GetConnectionString("myDb1");
-        optionsBuilder.UseSqlServer(cadena);
+        optionsBuilder.UseSqlServer(cadena, sqlServerOptionsAction: sqlOptions =>
+        {
+            sqlOptions.EnableRetryOnFailure(
+                maxRetryCount: 10,
+                maxRetryDelay: TimeSpan.FromSeconds(30),
+                errorNumbersToAdd: null);
+        });
     }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
