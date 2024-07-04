@@ -20,7 +20,6 @@ namespace PruebaMVCTest.Services.Repositorio
         [TestMethod]
         public async Task DameTodosTest()
         {
-            //return await _context.Set<T>().ToListAsync();
             var should = await repositorio.DameTodos();
             var expected = new List<Usuario>()
             {
