@@ -45,6 +45,10 @@ namespace PruebaMVCTest.Controllers
             var lista = result.ViewData.Model as VistaListaCancione;
             Assert.IsNotNull(lista);
             Assert.AreEqual(1, lista.ListasId);
+
+            var resultIdNotFound = controlador.Details(null).Result as NotFoundResult;
+            Assert.IsNotNull(resultIdNotFound);
+            Assert.AreEqual(404, resultIdNotFound.StatusCode);
         }
 
         [TestMethod()]
@@ -74,6 +78,11 @@ namespace PruebaMVCTest.Controllers
         {
             var result = controlador.Edit(1).Result as ViewResult;
             Assert.IsNotNull(result);
+
+            var resultIdNotFound = controlador.Edit(null).Result as NotFoundResult;
+            Assert.IsNotNull(resultIdNotFound);
+            Assert.AreEqual(404, resultIdNotFound.StatusCode);
+
         }
 
         [TestMethod()]
@@ -87,6 +96,11 @@ namespace PruebaMVCTest.Controllers
             var listaCancioneModificada = contexto.DameTodos().Result.FirstOrDefault(x => x.ListasId == 1 && x.CancionesId == 3);
             Assert.IsNotNull(listaCancioneModificada);
             Assert.AreEqual(3, listaCancioneModificada.CancionesId);
+
+            var resultIdNotFound = controlador.Edit(99, listaCancioneCreada).Result as NotFoundResult;
+            Assert.IsNotNull(resultIdNotFound);
+            Assert.AreEqual(404, resultIdNotFound.StatusCode);
+
             await controlador.DeleteConfirmed(listaCancioneCreada.Id);
         }
 
@@ -96,6 +110,10 @@ namespace PruebaMVCTest.Controllers
             var result = controlador.Delete(1).Result as ViewResult;
             Assert.IsNotNull(result);
             Assert.IsNull(result.ViewName);
+
+            var resultNotFound = controlador.Delete(99).Result as NotFoundResult;
+            Assert.IsNotNull(resultNotFound);
+            Assert.AreEqual(404, resultNotFound.StatusCode);
         }
         [TestMethod()]
         public void ExistTest()

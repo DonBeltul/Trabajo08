@@ -106,6 +106,13 @@ namespace PruebaMVCTest.Controllers
             var canciones = result.ViewData.Model as VistaCancione;
             Assert.IsNotNull(canciones);
             Assert.AreEqual("Ignite", canciones.Titulo);
+
+            var resultIdNotFound = controlador.Details(null).Result as NotFoundResult;
+            Assert.IsNotNull(resultIdNotFound);
+            Assert.AreEqual(404, resultIdNotFound.StatusCode);
+            var resultNotFound = controlador.Details(99).Result as NotFoundResult;
+            Assert.IsNotNull(resultNotFound);
+            Assert.AreEqual(404, resultNotFound.StatusCode);
         }
 
         [TestMethod()]
@@ -134,6 +141,10 @@ namespace PruebaMVCTest.Controllers
         {
             var result = controlador.Edit(1).Result as ViewResult;
             Assert.IsNotNull(result);
+
+            var resultNotFound = controlador.Edit(99).Result as NotFoundResult;
+            Assert.IsNotNull(resultNotFound);
+            Assert.AreEqual(404, resultNotFound.StatusCode);
         }
 
         [TestMethod()]
@@ -144,10 +155,16 @@ namespace PruebaMVCTest.Controllers
             var CancionCreada = contexto.DameTodos().Result.FirstOrDefault(x => x.Titulo == "CancionTest");
             CancionCreada.Titulo = "CancionTest2";
             CancionCreada.AlbumesId = 8;
+
             await controlador.Edit(CancionCreada.Id, CancionCreada);
             var CancionModificada = contexto.DameTodos().Result.FirstOrDefault(x => x.Titulo == "CancionTest2");
             Assert.IsNotNull(CancionModificada);
             Assert.AreEqual("CancionTest2", CancionModificada.Titulo);
+
+            var resultIdNotFound = controlador.Edit(99, CancionCreada).Result as NotFoundResult;
+            Assert.IsNotNull(resultIdNotFound);
+            Assert.AreEqual(404, resultIdNotFound.StatusCode);
+
             await controlador.DeleteConfirmed(CancionCreada.Id);
         }
 
@@ -157,6 +174,10 @@ namespace PruebaMVCTest.Controllers
             var result = controlador.Delete(1).Result as ViewResult;
             Assert.IsNotNull(result);
             Assert.IsNull(result.ViewName);
+
+            var resultNotFound = controlador.Delete(99).Result as NotFoundResult;
+            Assert.IsNotNull(resultNotFound);
+            Assert.AreEqual(404, resultNotFound.StatusCode);
         }
         [TestMethod()]
         public void ExistTest()

@@ -137,7 +137,10 @@ namespace PruebaMVC.Controllers
             }
             var vista = await contextVista.DameTodos();
             var listasCanciones = vista.AsParallel().FirstOrDefault(m => m.Id == id);
-
+            if (listasCanciones == null)
+            {
+                return NotFound();
+            }
 
             return View(listasCanciones);
         }
