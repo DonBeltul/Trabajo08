@@ -49,6 +49,15 @@ namespace PruebaMVCTest.Controllers
             var lista = result.ViewData.Model as Lista;
             Assert.IsNotNull(lista);
             Assert.AreEqual("Gimnasio", lista.Nombre);
+
+
+            var resultIdNotFound = controlador.Details(null).Result as NotFoundResult;
+            Assert.IsNotNull(resultIdNotFound);
+            Assert.AreEqual(404, resultIdNotFound.StatusCode);
+            var resultNotFound = controlador.Details(99).Result as NotFoundResult;
+            Assert.IsNotNull(resultNotFound);
+            Assert.AreEqual(404, resultNotFound.StatusCode);
+
         }
 
         [TestMethod()]
@@ -91,7 +100,14 @@ namespace PruebaMVCTest.Controllers
             var ListaModificada = contexto.DameTodos().Result.FirstOrDefault(x => x.Nombre == "PruebaTest2");
             Assert.IsNotNull(ListaModificada);
             Assert.AreEqual("PruebaTest2", ListaModificada.Nombre);
+
+            var resultIdNotFound = controlador.Edit(99,ListaCreada).Result as NotFoundResult;
+            Assert.IsNotNull(resultIdNotFound);
+            Assert.AreEqual(404, resultIdNotFound.StatusCode);
+
             await controlador.DeleteConfirmed(ListaCreada.Id);
+
+
         }
 
         [TestMethod()]
@@ -100,6 +116,11 @@ namespace PruebaMVCTest.Controllers
             var result = controlador.Delete(1).Result as ViewResult;
             Assert.IsNotNull(result);
             Assert.IsNull(result.ViewName);
+
+
+            var resultNotFound = controlador.Delete(99).Result as NotFoundResult;
+            Assert.IsNotNull(resultNotFound);
+            Assert.AreEqual(404, resultNotFound.StatusCode);
         }
         [TestMethod()]
         public void ExistTest()
