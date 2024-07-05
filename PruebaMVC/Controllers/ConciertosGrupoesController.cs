@@ -111,11 +111,6 @@ namespace PruebaMVC.Controllers
         // GET: ConciertosGrupoes/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
             var conciertosGrupo = await context.DameUno((int)id);
 
             var vista = await contextVista.DameTodos();
