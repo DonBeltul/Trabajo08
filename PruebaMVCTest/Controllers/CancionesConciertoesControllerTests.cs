@@ -31,14 +31,17 @@ namespace PruebaMVC.Controllers.Tests
         new EFGenericRepositorio<VistaCancionConcierto> (InitConfiguration()));
 
         [TestMethod()]
-        public async Task AIndexTest()
+        public async Task AIndexTestDefault()
         {
             var resultado = await controller.Index("") as ViewResult;
             Assert.IsInstanceOfType(resultado.Model as List<VistaCancionConcierto>, typeof(List<VistaCancionConcierto>));
             Assert.IsNotNull(resultado.Model as List<VistaCancionConcierto>);
             Assert.AreEqual(11, (resultado.Model as List<VistaCancionConcierto>).Count());
-            Assert.AreEqual(null, resultado.ViewName);
-
+            Assert.AreEqual(null, resultado.ViewName); 
+        }
+        [TestMethod()]
+        public async Task AIndexTestTitiloCancionest()
+        {
             var resultadoTC = await controller.Index("TituloCanciones") as ViewResult;
             Assert.AreEqual("Ignite", (resultadoTC.Model as List<VistaCancionConcierto>).ElementAt(0).TituloCanciones);
             Assert.AreEqual("Ignite", (resultadoTC.Model as List<VistaCancionConcierto>).ElementAt(1).TituloCanciones);
@@ -46,7 +49,10 @@ namespace PruebaMVC.Controllers.Tests
             Assert.IsInstanceOfType(resultadoTC.Model as List<VistaCancionConcierto>, typeof(List<VistaCancionConcierto>));
             Assert.IsNotNull(resultadoTC.Model as List<VistaCancionConcierto>);
             Assert.AreEqual(11, (resultadoTC.Model as List<VistaCancionConcierto>).Count());
-
+        }
+        [TestMethod()]
+        public async Task AIndexTestTitiloCancionestDesc()
+        {
             var resultadoCancionesDesc = await controller.Index("canciones_desc") as ViewResult;
             Assert.AreEqual("Trois", (resultadoCancionesDesc.Model as List<VistaCancionConcierto>).ElementAt(0).TituloCanciones);
             Assert.AreEqual("Trois", (resultadoCancionesDesc.Model as List<VistaCancionConcierto>).ElementAt(1).TituloCanciones);
@@ -54,7 +60,10 @@ namespace PruebaMVC.Controllers.Tests
             Assert.IsInstanceOfType(resultadoCancionesDesc.Model as List<VistaCancionConcierto>, typeof(List<VistaCancionConcierto>));
             Assert.IsNotNull(resultadoCancionesDesc.Model as List<VistaCancionConcierto>);
             Assert.AreEqual(11, (resultadoCancionesDesc.Model as List<VistaCancionConcierto>).Count());
-
+        }
+        [TestMethod()]
+        public async Task AIndexTestTitiloTitulo()
+        {
             var resultadoTitulo = await controller.Index("Titulo") as ViewResult;
             Assert.AreEqual("FestivalLondres", (resultadoTitulo.Model as List<VistaCancionConcierto>).ElementAt(0).Titulo);
             Assert.AreEqual("FestivalLondres", (resultadoTitulo.Model as List<VistaCancionConcierto>).ElementAt(1).Titulo);
@@ -62,7 +71,10 @@ namespace PruebaMVC.Controllers.Tests
             Assert.IsInstanceOfType(resultadoTitulo.Model as List<VistaCancionConcierto>, typeof(List<VistaCancionConcierto>));
             Assert.IsNotNull(resultadoTitulo.Model as List<VistaCancionConcierto>);
             Assert.AreEqual(11, (resultadoTitulo.Model as List<VistaCancionConcierto>).Count());
-
+        }
+        [TestMethod()]
+        public async Task AIndexTestTitiloTituloDesc()
+        {
             var resultadoTituloDesc = await controller.Index("titulo_desc") as ViewResult;
             Assert.AreEqual("FestivalZaragoza", (resultadoTituloDesc.Model as List<VistaCancionConcierto>).ElementAt(0).Titulo);
             Assert.AreEqual("FestivalZaragoza", (resultadoTituloDesc.Model as List<VistaCancionConcierto>).ElementAt(1).Titulo);
@@ -71,9 +83,8 @@ namespace PruebaMVC.Controllers.Tests
             Assert.IsNotNull(resultadoTituloDesc.Model as List<VistaCancionConcierto>);
             Assert.AreEqual(11, (resultadoTituloDesc.Model as List<VistaCancionConcierto>).Count());
         }
-
         [TestMethod()]
-        public async Task DCreateTest1()
+        public async Task BCreateTest1()
         {
             CancionesConcierto concierto = new CancionesConcierto();
 
@@ -83,7 +94,7 @@ namespace PruebaMVC.Controllers.Tests
             await controller.Create(concierto);
 
             var lista = await controller.getCancionesConciertoContext().DameTodos();
-            int id = lista.FirstOrDefault(x => x.CancionesId.Equals(4) && x.ConciertosId.Equals(1)).Id;
+            int id = lista.FirstOrDefault(x => x.CancionesId == 4 && x.ConciertosId == 1).Id;
 
             var resultado = await controller.Details(id) as ViewResult;
             Assert.IsInstanceOfType(resultado.Model as VistaCancionConcierto, typeof(VistaCancionConcierto));
@@ -103,6 +114,24 @@ namespace PruebaMVC.Controllers.Tests
             Assert.AreEqual("CancionTest", contextCan.ElementAt(0).Titulo);
             Assert.AreEqual("Chispas", contextCan.ElementAt(1).Titulo);
             Assert.AreEqual("Ignite", contextCan.ElementAt(2).Titulo);
+
+            var concieroId1 = resultado.Model as VistaCancionConcierto;
+
+            Assert.IsInstanceOfType(concieroId1, typeof(VistaCancionConcierto));
+            Assert.AreEqual(4, concieroId1.CancionesId);
+            Assert.AreEqual(1, concieroId1.ConciertosId);
+
+            await controller.DeleteConfirmed(id);
+
+            try
+            {
+                var details = await controller.Details(id) as ViewResult;
+                Assert.Fail();
+            }
+            catch (Exception e)
+            {
+
+            }
         }
 
         [TestMethod()]
@@ -114,12 +143,9 @@ namespace PruebaMVC.Controllers.Tests
             Assert.IsInstanceOfType(conciertoCancionId1, typeof(VistaCancionConcierto));
             Assert.AreEqual("FestivalZaragoza", conciertoCancionId1.Titulo);
 
-            var lista = await controller.getCancionesConciertoContext().DameTodos();
-            int id = lista.FirstOrDefault(x => x.CancionesId.Equals(4) && x.ConciertosId.Equals(1)).Id;
-
             try
             {
-                var error = (await controller.Details(id) as ViewResult).Model as List<VistaCancionConcierto>;
+                var error = (await controller.Details(1000) as ViewResult).Model as List<VistaCancionConcierto>;
                 Assert.Fail();
             }
             catch (Exception ex)
@@ -173,7 +199,8 @@ namespace PruebaMVC.Controllers.Tests
         [TestMethod()]
         public void HEditTest1()
         {
-            Assert.Fail();
+            var result = controller.Edit(1).Result as ViewResult;
+            Assert.IsNotNull(result);
         }
 
         [TestMethod()]
@@ -185,12 +212,9 @@ namespace PruebaMVC.Controllers.Tests
             Assert.IsInstanceOfType(concieroId1, typeof(VistaCancionConcierto));
             Assert.AreEqual("Zaragoza", concieroId1.Lugar);
 
-            var lista = await controller.getCancionesConciertoContext().DameTodos();
-            int id = lista.FirstOrDefault(x => x.CancionesId.Equals(4) && x.ConciertosId.Equals(1)).Id;
-
             try
             {
-                var error = (await controller.Delete(id) as ViewResult).Model as Concierto;
+                var error = (await controller.Delete(1000) as ViewResult).Model as Concierto;
                 Assert.Fail();
             }
             catch (Exception ex)
@@ -200,36 +224,10 @@ namespace PruebaMVC.Controllers.Tests
         }
 
         [TestMethod()]
-        public async Task JDeleteConfirmedTest()
-        {
-            var lista = await controller.getCancionesConciertoContext().DameTodos();
-            int id = lista.FirstOrDefault(x => x.CancionesId.Equals(4) && x.ConciertosId.Equals(1)).Id;
-
-            var resultado = await controller.Details(id) as ViewResult;
-            var concieroId1 = resultado.Model as VistaCancionConcierto;
-
-            Assert.IsInstanceOfType(concieroId1, typeof(VistaCancionConcierto));
-            Assert.AreEqual(4, concieroId1.CancionesId);
-            Assert.AreEqual(1, concieroId1.ConciertosId);
-
-            await controller.DeleteConfirmed(id);
-
-            try
-            {
-                var details = await controller.Details(id) as ViewResult;
-                Assert.Fail();
-            }
-            catch (Exception e)
-            {
-
-            }
-        }
-        [TestMethod()]
         public async Task ZExistTest()
         {
-
             Assert.AreEqual(true, await controller.CancionesConciertoExists(1));
-            Assert.AreEqual(false, await controller.CancionesConciertoExists(100));
+            Assert.AreEqual(false, await controller.CancionesConciertoExists(1000));
         }
     }
 }
