@@ -70,6 +70,13 @@ namespace PruebaMVCTest.Controllers
             Assert.IsNotNull(listaCancioneCreada);
             Assert.AreEqual(1, listaCancioneCreada.ListasId);
             Assert.AreEqual(2, listaCancioneCreada.CancionesId);
+
+            controlador.ModelState.AddModelError("Titulo", "Required");
+            controlador.ModelState.AddModelError("Nombre", "Required");
+            var resultInvalidModel = await controlador.Create(ListaCancioneValido) as ViewResult;
+            Assert.IsNotNull(resultInvalidModel);
+            controlador.ModelState.Clear();
+
             await controlador.DeleteConfirmed(listaCancioneCreada.Id);
         }
 
@@ -100,6 +107,12 @@ namespace PruebaMVCTest.Controllers
             var resultIdNotFound = controlador.Edit(99, listaCancioneCreada).Result as NotFoundResult;
             Assert.IsNotNull(resultIdNotFound);
             Assert.AreEqual(404, resultIdNotFound.StatusCode);
+
+            controlador.ModelState.AddModelError("Titulo", "Required");
+            controlador.ModelState.AddModelError("Nombre", "Required");
+            var resultInvalidModel = await controlador.Edit(listaCancioneCreada.Id, listaCancioneCreada) as ViewResult;
+            Assert.IsNotNull(resultInvalidModel);
+            controlador.ModelState.Clear();
 
             await controlador.DeleteConfirmed(listaCancioneCreada.Id);
         }

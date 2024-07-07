@@ -165,6 +165,11 @@ namespace PruebaMVCTest.Controllers
             Assert.IsNotNull(resultIdNotFound);
             Assert.AreEqual(404, resultIdNotFound.StatusCode);
 
+            controlador.ModelState.AddModelError("Titulo", "Required");
+            var resultInvalidModel =await controlador.Edit(CancionCreada.Id, CancionCreada) as ViewResult;
+            Assert.IsNotNull(resultInvalidModel);
+            controlador.ModelState.Clear();
+
             await controlador.DeleteConfirmed(CancionCreada.Id);
         }
 
