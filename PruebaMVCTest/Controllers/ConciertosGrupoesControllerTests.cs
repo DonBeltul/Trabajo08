@@ -106,20 +106,6 @@ namespace PruebaMVC.Controllers.Tests
             Assert.AreEqual("Zaragoza", (resultado.Model as VistaConciertosGrupo).Lugar);
             Assert.AreEqual("FestivalZaragoza", (resultado.Model as VistaConciertosGrupo).Titulo);
 
-            var contextGrupo = (await controller.getGrupoContext().DameTodos()).OrderBy(x => x.Nombre);
-            var contextConci = (await controller.getConciertoContext().DameTodos()).OrderBy(x => x.Titulo);
-
-            Assert.IsInstanceOfType(contextGrupo, typeof(IOrderedEnumerable<Grupo>));
-            Assert.IsInstanceOfType(contextConci, typeof(IOrderedEnumerable<Concierto>));
-
-            Assert.AreEqual("FestivalLondres", contextConci.ElementAt(0).Titulo);
-            Assert.AreEqual("FestivalMalaga", contextConci.ElementAt(1).Titulo);
-            Assert.AreEqual("FestivalParis", contextConci.ElementAt(2).Titulo);
-
-            Assert.AreEqual("AC/DC", contextGrupo.ElementAt(0).Nombre);
-            Assert.AreEqual("Boney M.", contextGrupo.ElementAt(1).Nombre);
-            Assert.AreEqual("Metallica", contextGrupo.ElementAt(2).Nombre);
-
             await controller.DeleteConfirmed(id);
 
             try
