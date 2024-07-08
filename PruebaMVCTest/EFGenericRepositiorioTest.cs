@@ -27,7 +27,7 @@ namespace PruebaMVCTest
                 new Usuario(){Id = 1, Nombre = "Francisco", Email = "frtrj@gmail.com",Contraseña = "franchesco"},
                 new Usuario(){Id = 2, Nombre = "Majose", Email = "mjo@gmail.com",Contraseña = "mariajose"},
                 new Usuario(){Id = 3, Nombre = "Jose María", Email = "joma@gmail.com",Contraseña = "chema"},
-                new Usuario(){Id = 5, Nombre = "Anggeld", Email = "angd@gmail.com",Contraseña = "anggeld"}
+                new Usuario(){Id = 49, Nombre = "Anggeld", Email = "ang@gmail.com",Contraseña = "angeld"}
                 
             };
             Assert.IsNotNull(should);

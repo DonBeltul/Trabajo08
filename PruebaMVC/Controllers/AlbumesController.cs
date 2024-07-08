@@ -9,8 +9,7 @@ namespace PruebaMVC.Controllers
 {
     public class AlbumesController(
         IGenericRepositorio<Albume> context,
-        IGenericRepositorio<Grupo> contextGrupo,
-        IGenericRepositorio<VistaAlbume> contextVista)
+        IGenericRepositorio<Grupo> contextGrupo)
         : Controller
 
 
@@ -24,7 +23,7 @@ namespace PruebaMVC.Controllers
             ViewData["IDSortParm"] = sortOrder == "Grupos" ? "grupos_desc" : "Grupos";
             ViewData["FechaSortParm"] = sortOrder == "Fecha" ? "fecha_desc" : "Fecha";
 
-            var vista = await contextVista.DameTodos();
+            var vista = await context.DameTodos();
             var conjunto = vista.Select(x => x);
             if (!String.IsNullOrEmpty(searchString))
             {
@@ -42,10 +41,10 @@ namespace PruebaMVC.Controllers
                     conjunto = conjunto.OrderByDescending(s => s.Genero);
                     break;
                 case "Grupos":
-                    conjunto = conjunto.OrderBy(s => s.NombreGrupo);
+                    conjunto = conjunto.OrderBy(s => s.GruposId);
                     break;
                 case "grupos_desc":
-                    conjunto = conjunto.OrderByDescending(s => s.NombreGrupo);
+                    conjunto = conjunto.OrderByDescending(s => s.GruposId);
                     break;
                 case "Fecha":
                     conjunto = conjunto.OrderBy(s => s.Fecha);
@@ -70,7 +69,7 @@ namespace PruebaMVC.Controllers
             ViewData["IDSortParm"] = sortOrder == "Grupos" ? "grupos_desc" : "Grupos";
             ViewData["FechaSortParm"] = sortOrder == "Fecha" ? "fecha_desc" : "Fecha";
             var letra = 'u';
-            var vista = await contextVista.DameTodos();
+            var vista = await context.DameTodos();
             var conjunto = vista.Select(x => x).
                 Where(x => x.Genero == "Heavy Metal" && x.Titulo != null && x.Titulo.Contains(letra));
             if (!String.IsNullOrEmpty(searchString))
@@ -89,10 +88,10 @@ namespace PruebaMVC.Controllers
                     conjunto = conjunto.OrderByDescending(s => s.Genero);
                     break;
                 case "Grupos":
-                    conjunto = conjunto.OrderBy(s => s.NombreGrupo);
+                    conjunto = conjunto.OrderBy(s => s.GruposId);
                     break;
                 case "grupos_desc":
-                    conjunto = conjunto.OrderByDescending(s => s.NombreGrupo);
+                    conjunto = conjunto.OrderByDescending(s => s.GruposId);
                     break;
                 case "Fecha":
                     conjunto = conjunto.OrderBy(s => s.Fecha);
@@ -115,7 +114,7 @@ namespace PruebaMVC.Controllers
             {
                 return NotFound();
             }
-            var conjunto = await contextVista.DameTodos();
+            var conjunto = await context.DameTodos();
             var albume = conjunto.FirstOrDefault(x => x.Id == id);
             if (albume == null)
             {
@@ -155,7 +154,7 @@ namespace PruebaMVC.Controllers
         {
 
             var albume = await context.DameUno(id);
-            var vista = await contextVista.DameTodos();
+            var vista = await context.DameTodos();
             var conjunto = vista.FirstOrDefault(x => x.Id == id);
             var contextGru = await contextGrupo.DameTodos();
             ViewData["GruposId"] = new SelectList(contextGru.OrderBy(x => x.Nombre), "Id", "Nombre", albume.GruposId);
@@ -194,7 +193,7 @@ namespace PruebaMVC.Controllers
                 return RedirectToAction(nameof(Index));
             }
 
-            var vista = await contextVista.DameTodos();
+            var vista = await context.DameTodos();
             var conjunto = vista.FirstOrDefault(x => x.Id == id);
             var contextGru = await contextGrupo.DameTodos();
             ViewData["GruposId"] = new SelectList(contextGru.OrderBy(x => x.Nombre), "Id", "Nombre", albume.GruposId);
@@ -205,7 +204,7 @@ namespace PruebaMVC.Controllers
         public async Task<IActionResult> Delete(int? id)
         {
          
-            var vista = await contextVista.DameTodos();
+            var vista = await context.DameTodos();
             var albume =vista.FirstOrDefault(x => x.Id == id);
             if (albume == null)
             {
