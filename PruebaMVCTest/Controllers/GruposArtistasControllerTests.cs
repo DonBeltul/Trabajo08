@@ -62,7 +62,7 @@ namespace PruebaMVC.Controllers.Tests
                 ArtistasId = 3
             };
             Assert.IsNotNull(nuevoGrupoaArtista);
-            controlador.Create(nuevoGrupoaArtista);
+            await controlador.Create(nuevoGrupoaArtista);
 
             var artistaGrupoNuevo = contexto.GruposArtistas.FirstOrDefault(x => x.GruposId == 2 && x.ArtistasId == 3);
             Assert.IsNotNull(artistaGrupoNuevo);
