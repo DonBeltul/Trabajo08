@@ -65,10 +65,6 @@ namespace PruebaMVC.Controllers
         // GET: ConciertosGrupoes/Details/5
         public async Task<IActionResult> Details(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
             var vista = await contextVista.DameTodos();
             var conciertosGrupo = vista.AsParallel().FirstOrDefault(m => m.Id == id);
             if (conciertosGrupo == null)

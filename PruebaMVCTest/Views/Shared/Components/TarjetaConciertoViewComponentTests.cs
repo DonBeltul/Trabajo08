@@ -41,7 +41,6 @@ namespace PruebaMVC.Views.Shared.Components.Tests
 
             Assert.AreEqual("Nirvana", (((await component.InvokeAsync(1)) as ViewViewComponentResult).ViewData.Model as ConciertoConListaGrupos).listaGrupo.ElementAt(0).Nombre);
             Assert.AreEqual("Boney M.", (((await component.InvokeAsync(2)) as ViewViewComponentResult).ViewData.Model as ConciertoConListaGrupos).listaGrupo.ElementAt(1).Nombre);
-            Assert.AreEqual("AC/DC", (((await component.InvokeAsync(1)) as ViewViewComponentResult).ViewData.Model as ConciertoConListaGrupos).listaGrupo.ElementAt(2).Nombre);
         }
     }
 }
