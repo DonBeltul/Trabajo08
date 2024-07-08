@@ -325,6 +325,7 @@ namespace PruebaMVC.Controllers.Tests
         {
 
             Concierto objeto = new Concierto();
+            objeto.Id = 25;
 
             try
             {
@@ -345,7 +346,7 @@ namespace PruebaMVC.Controllers.Tests
 
             }
             Concierto conciertoCancion = new Concierto();
-            conciertoCancion.Lugar = "Zaragozica";
+            conciertoCancion.Lugar = "Zaragoza";
             var vista = await controller.Edit(1, conciertoCancion);
         }
 
