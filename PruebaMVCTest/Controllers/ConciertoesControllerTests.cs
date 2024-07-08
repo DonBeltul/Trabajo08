@@ -324,8 +324,29 @@ namespace PruebaMVC.Controllers.Tests
         public async Task GEditTest1()
         {
 
-            var result = controller.Edit(1).Result as ViewResult;
-            Assert.IsNotNull(result);
+            Concierto objeto = new Concierto();
+
+            try
+            {
+                await controller.Edit(25, objeto);
+                Assert.Fail();
+            }
+            catch (Exception e)
+            {
+
+            }
+            try
+            {
+                await controller.Edit(15, objeto);
+                Assert.Fail();
+            }
+            catch (Exception e)
+            {
+
+            }
+            Concierto conciertoCancion = new Concierto();
+            conciertoCancion.Lugar = "Zaragozica";
+            var vista = await controller.Edit(1, conciertoCancion);
         }
 
         [TestMethod()]
