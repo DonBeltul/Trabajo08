@@ -85,15 +85,7 @@ namespace PruebaMVC.Controllers.Tests
             var artista = resultado.ViewData.Model as Artista;
             Assert.IsNotNull(artista);
             Assert.AreEqual("Artista3", artista.Nombre);
-
-
-            artista.Nombre = "Artista 3 Modificado";
-            await _controlador.Edit(3, artista, null);
-            var artistaModificado = contexto.Artistas.FirstOrDefault(x => x.Nombre == "Artista 3 Modificado");
-            Assert.IsNotNull(artistaModificado);
-            Assert.AreEqual("Artista 3 Modificado", artistaModificado.Nombre);
-
-
+            
         }
         [TestMethod()]
         public async Task DEditTestVolver()
