@@ -78,21 +78,27 @@ namespace PruebaMVC.Controllers.Tests
         [TestMethod()]
         public async Task DEditTest()
         {
-           var resultado = await _controlador.Edit(3) as ViewResult;
+            var resultado = await _controlador.Edit(3) as ViewResult;
             Assert.IsNotNull(resultado);
             Assert.IsNull(resultado.ViewName);
             Assert.IsNotNull(resultado.ViewData.Model);
             var artista = resultado.ViewData.Model as Artista;
             Assert.IsNotNull(artista);
             Assert.AreEqual("Artista3", artista.Nombre);
+            
+        }
+        [TestMethod()]
+        public async Task DEditTestVolver()
+        {
+            var resultado = await _controlador.Details(3) as ViewResult;
+            var artista = contexto.Artistas.FirstOrDefault(x => x.Nombre == "Artista 3 Modificado");
+            Assert.IsNotNull(artista);
+            Assert.AreEqual("Artista 3 Modificado", artista.Nombre);
 
-            
-            artista.Nombre = "Artista 3 Modificado";
-            await _controlador.Edit(3, artista,null);
-            var artistaModificado = contexto.Artistas.FirstOrDefault(x => x.Nombre == "Artista 3 Modificado");
-            Assert.IsNotNull(artistaModificado);
-            
-            Assert.AreEqual("Artista 3 Modificado", artistaModificado.Nombre);
+            artista.Nombre = "Artista3";
+            await _controlador.Edit(3, artista, null);
+            var artistaVolver = contexto.Artistas.FirstOrDefault(x => x.Nombre == "Artista3");
+            Assert.IsNotNull(artistaVolver);
         }
 
         [TestMethod()]
