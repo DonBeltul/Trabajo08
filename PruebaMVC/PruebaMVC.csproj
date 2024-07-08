@@ -36,6 +36,11 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Include="Views\GruposArtistas\Create.cshtml" />
+    <None Include="Views\GruposArtistas\Delete.cshtml" />
+    <None Include="Views\GruposArtistas\Details.cshtml" />
+    <None Include="Views\GruposArtistas\Edit.cshtml" />
+    <None Include="Views\GruposArtistas\Index.cshtml" />
     <None Include="wwwroot\img\Concierto\ConciertoId1.png" />
     <None Include="wwwroot\img\Concierto\ConciertoId10.png" />
     <None Include="wwwroot\img\Concierto\ConciertoId11.png" />

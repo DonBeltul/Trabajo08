@@ -22,15 +22,15 @@
 </div>
 <table class="table">
     <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Nombre)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Usuario)
-            </th>
-            <th></th>
-        </tr>
+    <tr>
+        <th>
+            <a asp-action="Index" asp-route-sortOrder="@ViewData["NombreListaSortParm"]">@Html.DisplayNameFor(model => model.Nombre)</a>
+        </th>
+        <th>
+            <a asp-action="Index" asp-route-sortOrder="@ViewData["NombreUsuarioSortParm"]">@Html.DisplayNameFor(model => model.Usuario)</a>
+        </th>
+        <th></th>
+    </tr>
     </thead>
     <tbody>
     @foreach (var item in Model) {

@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
 using PruebaMVC.Models;
 using PruebaMVC.Services.Repositorio;
 
@@ -9,8 +10,7 @@ namespace PruebaMVC.Controllers
     public class GruposArtistasController(
         IGenericRepositorio<GruposArtista> context,
         IGenericRepositorio<Artista> contextArtista,
-        IGenericRepositorio<Grupo> contextGrupo,
-        IGenericRepositorio<VistaGruposArtista> contextVista)
+        IGenericRepositorio<Grupo> contextGrupo)
         : Controller
     {
         // GET: GruposArtistas
@@ -19,43 +19,51 @@ namespace PruebaMVC.Controllers
             ViewData["ArtistaSortParm"] = sortOrder == "NombreArtista" ? "artista_desc" : "NombreArtista";
             ViewData["GrupoSortParm"] = sortOrder == "NombreGrupo" ? "grupo_desc" : "NombreGrupo";
 
-            var grupoCContext = await contextVista.DameTodos();
+            var TodoGrupoCContext = await context.DameTodos();
+            
+            foreach (var item in TodoGrupoCContext)
+            {
+                if (item.ArtistasId != null) item.Artistas = await contextArtista.DameUno((int)item.ArtistasId);
+                if (item.GruposId != null) item.Grupos = await contextGrupo.DameUno((int)item.GruposId);
+            }
 
             switch (sortOrder)
             {
                 case "artista_desc":
-                    grupoCContext = grupoCContext.OrderByDescending(s => s.NombreArtista).ToList();
+                    TodoGrupoCContext = TodoGrupoCContext.OrderByDescending(s => s.Artistas.Nombre).ToList();
                     break;
                 case "NombreArtista":
-                    grupoCContext = grupoCContext.OrderBy(s => s.NombreArtista).ToList();
+                    TodoGrupoCContext = TodoGrupoCContext.OrderBy(s => s.Artistas.Nombre).ToList();
                     break;
                 case "grupo_desc":
-                    grupoCContext = grupoCContext.OrderByDescending(s => s.NombreGrupo).ToList();
+                    TodoGrupoCContext = TodoGrupoCContext.OrderByDescending(s => s.Grupos.Nombre).ToList();
                     break;
                 case "NombreGrupo":
-                    grupoCContext = grupoCContext.OrderBy(s => s.NombreGrupo).ToList();
+                    TodoGrupoCContext = TodoGrupoCContext.OrderBy(s => s.Grupos.Nombre).ToList();
                     break;
             }
 
-            return View(grupoCContext);
+            return View(TodoGrupoCContext);
         }
 
         // GET: GruposArtistas/Details/5
         public async Task<IActionResult> Details(int? id)
         {
-            if (id == null)
+
+            var grupoArtistaDetalles = await context.DameTodos();
+
+            foreach (var item in grupoArtistaDetalles)
+            {
+                item.Artistas = await contextArtista.DameUno((int)item.ArtistasId);
+                item.Grupos = await contextGrupo.DameUno((int)item.GruposId);
+            }
+            var lista = grupoArtistaDetalles.FirstOrDefault(m => m.Id == id);
+            if (lista == null)
             {
                 return NotFound();
             }
 
-            var vista = await contextVista.DameTodos();
-            var gruposArtista =vista.FirstOrDefault(m => m.Id == id);
-            if (gruposArtista == null)
-            {
-                return NotFound();
-            }
-
-            return View(gruposArtista);
+            return View(lista);
         }
 
         // GET: GruposArtistas/Create
@@ -63,8 +71,8 @@ namespace PruebaMVC.Controllers
         {
             var contextArt = await contextArtista.DameTodos();
             var contextGru = await contextGrupo.DameTodos();
-            ViewData["ArtistasId"] = new SelectList(contextArt.OrderBy(x=>x.Nombre), "Id", "Nombre");
-            ViewData["GruposId"] = new SelectList(contextGru.OrderBy(x=>x.Nombre), "Id", "Nombre");
+            ViewData["ArtistasId"] = new SelectList(contextArt.OrderBy(x => x.Nombre), "Id", "Nombre");
+            ViewData["GruposId"] = new SelectList(contextGru.OrderBy(x => x.Nombre), "Id", "Nombre");
             return View();
         }
 
@@ -77,7 +85,7 @@ namespace PruebaMVC.Controllers
         {
             if (ModelState.IsValid)
             {
-               await context.Agregar(gruposArtista);
+                await context.Agregar(gruposArtista);
                 return RedirectToAction(nameof(Index));
             }
             var contextArt = await contextArtista.DameTodos();
@@ -88,8 +96,9 @@ namespace PruebaMVC.Controllers
         }
 
         // GET: GruposArtistas/Edit/5
-        public async Task<IActionResult> Edit(int? id)
+        public async Task<IActionResult> Edit(int? id, GruposArtista artistaGrupo)
         {
+
             if (id == null)
             {
                 return NotFound();
@@ -100,13 +109,13 @@ namespace PruebaMVC.Controllers
             {
                 return NotFound();
             }
-            var vista = await contextVista.DameTodos();
-            var conjunto = vista.FirstOrDefault(x => x.Id == id);
+
             var contextArt = await contextArtista.DameTodos();
             var contextGru = await contextGrupo.DameTodos();
             ViewData["ArtistasId"] = new SelectList(contextArt.OrderBy(x => x.Nombre), "Id", "Nombre", gruposArtista.ArtistasId);
             ViewData["GruposId"] = new SelectList(contextGru.OrderBy(x => x.Nombre), "Id", "Nombre", gruposArtista.GruposId);
-            return View(conjunto);
+           
+            return View(gruposArtista);
         }
 
         // POST: GruposArtistas/Edit/5
@@ -125,7 +134,7 @@ namespace PruebaMVC.Controllers
             {
                 try
                 {
-                   await context.Modificar(id,gruposArtista);
+                    await context.Modificar(id, gruposArtista);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -140,13 +149,12 @@ namespace PruebaMVC.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            var vista = await contextVista.DameTodos();
-            var conjunto = vista.FirstOrDefault(x => x.Id == id);
+
             var contextArt = await contextArtista.DameTodos();
             var contextGru = await contextGrupo.DameTodos();
             ViewData["ArtistasId"] = new SelectList(contextArt.OrderBy(x => x.Nombre), "Id", "Nombre", gruposArtista.ArtistasId);
             ViewData["GruposId"] = new SelectList(contextGru.OrderBy(x => x.Nombre), "Id", "Nombre", gruposArtista.GruposId);
-            return View(conjunto);
+            return View(gruposArtista);
         }
 
         // GET: GruposArtistas/Delete/5
@@ -156,15 +164,19 @@ namespace PruebaMVC.Controllers
             {
                 return NotFound();
             }
+            var gruposArtista = await context.DameTodos();
 
-            var vista = await contextVista.DameTodos();
-            var gruposArtista = vista.FirstOrDefault(m => m.Id == id);
-            if (gruposArtista == null)
+            foreach (var item in gruposArtista)
+            {
+                item.Artistas = await contextArtista.DameUno((int)item.ArtistasId);
+                item.Grupos = await contextGrupo.DameUno((int)item.GruposId);
+            }
+            var lista = gruposArtista.FirstOrDefault(m => m.Id == id);
+            if (lista == null)
             {
                 return NotFound();
             }
-
-            return View(gruposArtista);
+            return View(lista);
         }
 
         // POST: GruposArtistas/Delete/5
@@ -175,14 +187,14 @@ namespace PruebaMVC.Controllers
             var gruposArtista = await context.DameUno(id);
             if (gruposArtista != null)
             {
-               await context.Borrar(id);
+                await context.Borrar(id);
             }
             return RedirectToAction(nameof(Index));
         }
 
-        private async Task<bool> GruposArtistaExists(int id)
+        public async Task<bool> GruposArtistaExists(int id)
         {
-            var vista =await contextArtista.DameTodos();
+            var vista = await contextArtista.DameTodos();
             return vista.Any(e => e.Id == id);
         }
     }

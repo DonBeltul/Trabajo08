@@ -19,10 +19,31 @@ namespace PruebaMVC.Controllers
         private const string DataComboNombre = "Nombre";
 
         // GET: ListasCanciones
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string sortOrder)
         {
+
+            ViewData["NombreSortParm"] = sortOrder == "Nombre" ? "nombre_desc" : "Nombre";
+            ViewData["TituloSortParm"] = sortOrder == "Titulo" ? "titulo_desc" : "Titulo";
             var grupoCContext = await contextVista.DameTodos();
+
+            switch (sortOrder)
+            {
+                case "nombre_desc":
+                    grupoCContext = grupoCContext.OrderByDescending(s => s.Nombre).ToList();
+                    break;
+                case "Nombre":
+                    grupoCContext = grupoCContext.OrderBy(s => s.Nombre).ToList();
+                    break;
+                case "titulo_desc":
+                    grupoCContext = grupoCContext.OrderByDescending(s => s.Titulo).ToList();
+                    break;
+                case "Titulo":
+                    grupoCContext = grupoCContext.OrderBy(s => s.Titulo).ToList();
+                    break;
+            }
+
             return View(grupoCContext);
+
         }
 
         // GET: ListasCanciones/Details/5
@@ -137,10 +158,7 @@ namespace PruebaMVC.Controllers
             }
             var vista = await contextVista.DameTodos();
             var listasCanciones = vista.AsParallel().FirstOrDefault(m => m.Id == id);
-            if (listasCanciones == null)
-            {
-                return NotFound();
-            }
+
 
             return View(listasCanciones);
         }

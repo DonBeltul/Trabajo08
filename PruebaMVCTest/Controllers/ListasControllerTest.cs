@@ -30,7 +30,7 @@ namespace PruebaMVCTest.Controllers
         [TestMethod()]
         public void IndexTest()
         {
-            var result = controlador.Index().Result as ViewResult;
+            var result = controlador.Index("").Result as ViewResult;
             Assert.IsNotNull(result);
             Assert.IsNull(result.ViewName);
             Assert.IsNotNull(result.ViewData.Model);
