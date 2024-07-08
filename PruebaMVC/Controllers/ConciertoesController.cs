@@ -123,10 +123,6 @@ namespace PruebaMVC.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Titulo,Id,Fecha,Genero,Lugar,Precio")] Concierto concierto)
         {
-            if (id != concierto.Id)
-            {
-                return NotFound();
-            }
 
             if (ModelState.IsValid)
             {
