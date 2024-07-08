@@ -8,7 +8,7 @@ namespace PruebaMVC.Controllers
     public class UsuariosController(IGenericRepositorio<Usuario> context) : Controller
     {
         // GET: Usuarios
-        public async Task<IActionResult> Index(string sortOrder, string searchString, string mostrar ="Ocultar")
+        public async Task<IActionResult> Index(string sortOrder, string searchString, string mostrar = "Ocultar")
         {
             ViewData["NombreSortParm"] = String.IsNullOrEmpty(sortOrder) ? "nombre_desc" : "";
             ViewData["EmailSortParm"] = sortOrder == "Email" ? "email_desc" : "Email";
@@ -35,9 +35,9 @@ namespace PruebaMVC.Controllers
                 "nombre_desc" => usuarios.OrderByDescending(s => s.Nombre),
                 "Email" => usuarios.OrderBy(s => s.Email),
                 "email_desc" => usuarios.OrderByDescending(s => s.Email),
-                "Contraseña" => usuarios.OrderBy(s =>s.Contraseña),
-                "contraseña_desc" => usuarios.OrderByDescending(s =>s.Contraseña),
-                 _ => usuarios.OrderBy(s => s.Nombre)
+                "Contraseña" => usuarios.OrderBy(s => s.Contraseña),
+                "contraseña_desc" => usuarios.OrderByDescending(s => s.Contraseña),
+                _ => usuarios.OrderBy(s => s.Nombre)
 
             };
             return View(usuarios);
@@ -47,7 +47,7 @@ namespace PruebaMVC.Controllers
         public async Task<IActionResult> Details(int id)
         {
             var usuario = context.DameUno(id);
-          
+
             return View(await usuario);
         }
 
@@ -87,10 +87,7 @@ namespace PruebaMVC.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,Nombre,Email,Contraseña")] Usuario usuario)
         {
-            if (id != usuario.Id)
-            {
-                return NotFound();
-            }
+
 
             if (ModelState.IsValid)
             {
@@ -128,7 +125,7 @@ namespace PruebaMVC.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             await context.Borrar(id);
-         return RedirectToAction(nameof(Index));
+            return RedirectToAction(nameof(Index));
         }
 
         private async Task<bool> UsuarioExists(int id)

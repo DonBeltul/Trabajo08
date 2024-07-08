@@ -12,7 +12,7 @@ namespace PruebaMVC.Controllers
         {
             ViewData["NombreSortParm"] = String.IsNullOrEmpty(sortOrder) ? "nombre_desc" : "";
             var vista = await context.DameTodos();
-            var grupos = vista.Select(x=>x);
+            var grupos = vista.Select(x => x);
             if (!String.IsNullOrEmpty(searchString))
             {
                 grupos = grupos.Where(s => s.Nombre!.Contains(searchString));
@@ -54,9 +54,9 @@ namespace PruebaMVC.Controllers
         }
 
         // GET: Grupoes/Details/5
-            public async Task<IActionResult> Details(int? id)
+        public async Task<IActionResult> Details(int? id)
         {
-            
+
 
             var vista = await context.DameTodos();
             var grupo = vista
@@ -89,10 +89,10 @@ namespace PruebaMVC.Controllers
         // GET: Grupoes/Edit/5
         public async Task<IActionResult> Edit(int id)
         {
-           
+
 
             var grupo = await context.DameUno(id);
-            
+
             return View(grupo);
         }
 
@@ -112,7 +112,7 @@ namespace PruebaMVC.Controllers
             {
                 try
                 {
-                    await context.Modificar(id,grupo);
+                    await context.Modificar(id, grupo);
                 }
                 catch (DbUpdateConcurrencyException)
                 {

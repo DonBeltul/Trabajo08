@@ -1,4 +1,4 @@
-﻿@model IEnumerable<PruebaMVC.Models.VistaAlbume>
+﻿@model IEnumerable<PruebaMVC.Models.Albume>
 
 @{
     ViewData["Title"] = "Index";
@@ -27,7 +27,7 @@
                 <a asp-action="Index" asp-route-sortOrder="@ViewData["TituloSortParm"]">@Html.DisplayNameFor(model => model.Titulo)</a>
             </th>
             <th>
-                <a asp-action="Index" asp-route-sortOrder="@ViewData["IDSortParm"]">@Html.DisplayNameFor(model => model.NombreGrupo)</a>,
+                <a asp-action="Index" asp-route-sortOrder="@ViewData["IDSortParm"]">@Html.DisplayNameFor(model => model.Grupos.Nombre)</a>,
                 <a asp-action="Index" asp-route-sortOrder="@ViewData["GeneroSortParm"]">@Html.DisplayNameFor(model => model.Genero)</a>,
                 <a asp-action="Index" asp-route-sortOrder="@ViewData["FechaSortParm"]">@Html.DisplayNameFor(model => model.Fecha)</a>
             </th>
@@ -42,19 +42,19 @@
             <tr>
                 <td>
                     @Html.DisplayFor(modelItem => item.Titulo)
-                    
+
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.NombreGrupo)<br/>
-                    
-                    @Html.DisplayFor(modelItem => item.Genero)<br/>
-                    
-                    @Html.DisplayFor(modelItem => item.Fecha)<br/>
-                    
+                    @Html.DisplayFor(modelItem => item.Grupos.Nombre)<br />
+
+                    @Html.DisplayFor(modelItem => item.Genero)<br />
+
+                    @Html.DisplayFor(modelItem => item.Fecha)<br />
+
                 </td>
                 <td>
-                    <a asp-action="Edit" asp-route-id="@item.Id"><i class="fa-solid fa-pen"></i></a> 
-                    <a asp-action="Details" asp-route-id="@item.Id"><i class="fa-solid fa-eye"></i></a> 
+                    <a asp-action="Edit" asp-route-id="@item.Id"><i class="fa-solid fa-pen"></i></a>
+                    <a asp-action="Details" asp-route-id="@item.Id"><i class="fa-solid fa-eye"></i></a>
                     <a asp-action="Delete" asp-route-id="@item.Id"><i class="fa-solid fa-trash"></i></a>
                 </td>
             </tr>

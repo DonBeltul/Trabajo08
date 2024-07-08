@@ -24,107 +24,192 @@ namespace PruebaMVC.Controllers.Tests
             return config;
         }
 
-        public readonly GrupoesController Gcontroller = new(new EFGenericRepositorio<Grupo>(InitConfiguration()));
+        public GrupoesController Gcontroller = new(new EFGenericRepositorio<Grupo>(InitConfiguration()));
 
         [TestMethod()]
-        public void IndexTest()
+        public async Task IndexTest()
         {
-            var result = Gcontroller.Index("","").Result as ViewResult;
-            Assert.IsNotNull(result);
-          
-            Assert.IsNotNull(result.ViewData.Model);
-            var listaGrupos = result.ViewData.Model as List<Grupo>;
-            Assert.IsNotNull(listaGrupos);
-            Assert.AreEqual(5, listaGrupos.Count);
+            var resultado = await Gcontroller.Index("", "") as ViewResult;
+            Assert.IsInstanceOfType(resultado.Model as IEnumerable<Grupo>, typeof(IEnumerable<Grupo>));
+            Assert.IsNotNull(resultado.Model as IEnumerable<Grupo>);
+            Assert.AreEqual(5, (resultado.Model as IEnumerable<Grupo>).Count());
+            Assert.AreEqual(null, resultado.ViewName);
+
+            var resultadoNombre = await Gcontroller.Index("Nombre", "") as ViewResult;
+            Assert.AreEqual("AC/DC", (resultadoNombre.Model as IEnumerable<Grupo>).ElementAt(0).Nombre);
+            Assert.AreEqual("Boney M.", (resultadoNombre.Model as IEnumerable<Grupo>).ElementAt(1).Nombre);
+            Assert.AreEqual("Metallica", (resultadoNombre.Model as IEnumerable<Grupo>).ElementAt(2).Nombre);
+            Assert.AreEqual("Nirvana", (resultadoNombre.Model as IEnumerable<Grupo>).ElementAt(3).Nombre);
+            Assert.AreEqual("Violadores del Verso", (resultadoNombre.Model as IEnumerable<Grupo>).ElementAt(4).Nombre);
+            Assert.IsInstanceOfType(resultadoNombre.Model as IEnumerable<Grupo>, typeof(IEnumerable<Grupo>));
+            Assert.IsNotNull(resultadoNombre.Model as IEnumerable<Grupo>);
+            Assert.AreEqual(5, (resultadoNombre.Model as IEnumerable<Grupo>).Count());
+
+            var resultadoNombreDesc = await Gcontroller.Index("Nombre_desc", "") as ViewResult;
+            Assert.AreEqual("AC/DC", (resultadoNombre.Model as IEnumerable<Grupo>).ElementAt(0).Nombre);
+            Assert.AreEqual("Boney M.", (resultadoNombre.Model as IEnumerable<Grupo>).ElementAt(1).Nombre);
+            Assert.AreEqual("Metallica", (resultadoNombre.Model as IEnumerable<Grupo>).ElementAt(2).Nombre);
+            Assert.AreEqual("Nirvana", (resultadoNombre.Model as IEnumerable<Grupo>).ElementAt(3).Nombre);
+            Assert.AreEqual("Violadores del Verso", (resultadoNombre.Model as IEnumerable<Grupo>).ElementAt(4).Nombre);
+            Assert.IsInstanceOfType(resultadoNombreDesc.Model as IEnumerable<Grupo>, typeof(IEnumerable<Grupo>));
+            Assert.IsNotNull(resultadoNombreDesc.Model as IEnumerable<Grupo>);
+            Assert.AreEqual(5, (resultadoNombreDesc.Model as IEnumerable<Grupo>).Count());
+
+
         }
 
         [TestMethod()]
-        public  void IndexConArtistasTest()
+        public async Task IndexConArtistasTest()
         {
-            var result = Gcontroller.Index("", "").Result as ViewResult;
-            Assert.IsNotNull(result);
-          
-            Assert.IsNotNull(result.ViewData.Model);
-            var listaGrupos = result.ViewData.Model as List<Grupo>;
-            Assert.IsNotNull(listaGrupos);
-            Assert.AreEqual(5, listaGrupos.Count);
+            var resultado = await Gcontroller.Index("", "") as ViewResult;
+            Assert.IsInstanceOfType(resultado.Model as IEnumerable<Grupo>, typeof(IEnumerable<Grupo>));
+            Assert.IsNotNull(resultado.Model as IEnumerable<Grupo>);
+            Assert.AreEqual(5, (resultado.Model as IEnumerable<Grupo>).Count());
+            Assert.AreEqual(null, resultado.ViewName);
+
+            var resultadoNombre = await Gcontroller.Index("Nombre", "") as ViewResult;
+            Assert.AreEqual("AC/DC", (resultadoNombre.Model as IEnumerable<Grupo>).ElementAt(0).Nombre);
+            Assert.AreEqual("Boney M.", (resultadoNombre.Model as IEnumerable<Grupo>).ElementAt(1).Nombre);
+            Assert.AreEqual("Metallica", (resultadoNombre.Model as IEnumerable<Grupo>).ElementAt(2).Nombre);
+            Assert.AreEqual("Nirvana", (resultadoNombre.Model as IEnumerable<Grupo>).ElementAt(3).Nombre);
+            Assert.AreEqual("Violadores del Verso", (resultadoNombre.Model as IEnumerable<Grupo>).ElementAt(4).Nombre);
+            Assert.IsInstanceOfType(resultadoNombre.Model as IEnumerable<Grupo>, typeof(IEnumerable<Grupo>));
+            Assert.IsNotNull(resultadoNombre.Model as IEnumerable<Grupo>);
+            Assert.AreEqual(5, (resultadoNombre.Model as IEnumerable<Grupo>).Count());
+
+            var resultadoNombreDesc = await Gcontroller.Index("Nombre_desc", "") as ViewResult;
+            Assert.AreEqual("AC/DC", (resultadoNombre.Model as IEnumerable<Grupo>).ElementAt(0).Nombre);
+            Assert.AreEqual("Boney M.", (resultadoNombre.Model as IEnumerable<Grupo>).ElementAt(1).Nombre);
+            Assert.AreEqual("Metallica", (resultadoNombre.Model as IEnumerable<Grupo>).ElementAt(2).Nombre);
+            Assert.AreEqual("Nirvana", (resultadoNombre.Model as IEnumerable<Grupo>).ElementAt(3).Nombre);
+            Assert.AreEqual("Violadores del Verso", (resultadoNombre.Model as IEnumerable<Grupo>).ElementAt(4).Nombre);
+            Assert.IsInstanceOfType(resultadoNombreDesc.Model as IEnumerable<Grupo>, typeof(IEnumerable<Grupo>));
+            Assert.IsNotNull(resultadoNombreDesc.Model as IEnumerable<Grupo>);
+            Assert.AreEqual(5, (resultadoNombreDesc.Model as IEnumerable<Grupo>).Count());
         }
 
         [TestMethod()]
-        public  void DetailsTest()
+        public async Task DetailsTest()
         {
-            var result = Gcontroller.Details(1).Result as ViewResult;
-            Assert.IsNotNull(result);
-          
-            Assert.IsNotNull(result.ViewData.Model);
-            var grupo = result.ViewData.Model as Grupo;
-            Assert.IsNotNull(grupo);
+            var resultado = await Gcontroller.Details(1) as ViewResult;
+            var grupo = resultado.Model as Grupo;
+
+            Assert.IsInstanceOfType(grupo, typeof(Grupo));
             Assert.AreEqual("Metallica", grupo.Nombre);
+
+            var lista = (await Gcontroller.Index("", "") as ViewResult).Model as IEnumerable<Grupo>;
+            int id = lista.FirstOrDefault(x => x.Nombre.Equals("Metallica")).Id + 10;
+
+            try
+            {
+                var error = (await Gcontroller.Details(id) as ViewResult).Model as Grupo;
+                Assert.Fail();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error capturado en Test Details");
+            }
         }
 
         [TestMethod()]
         public void CreateTest()
         {
-            var result = Gcontroller.Create() as ViewResult;
-            Assert.IsNotNull(result); 
+            var resultado = Gcontroller.Create() as ViewResult;
+            Assert.AreEqual(null, resultado.Model);
         }
 
         [TestMethod()]
-        public void CreateTest1()
+        public async Task CreateTest1()
         {
-            Grupo grupo = new Grupo() { Id = 89, Nombre = "Los Eustaquios" };
-            var aux = Gcontroller.Create(grupo).Result;
-            var result = Gcontroller.Index("", "").Result as ViewResult;
-            Assert.IsNotNull(result);
-        
-            Assert.IsNotNull(result.ViewData.Model);
-            var listaGrupos = result.ViewData.Model as List<Grupo>;
-            Assert.IsNotNull(listaGrupos);
-            Assert.AreEqual(6, listaGrupos.Count);
-            Assert.IsNotNull(result);
+            Grupo grupo = new Grupo();
+
+            grupo.Nombre = "Los plataplomo";
+
+
+            await Gcontroller.Create(grupo);
+
+            var lista = (await Gcontroller.Index("", "") as ViewResult).Model as IEnumerable<Grupo>;
+            int id = lista.FirstOrDefault(x => x.Nombre.Equals("Los plataplomo")).Id;
+
+            var resultado = await Gcontroller.Details(id) as ViewResult;
+            Assert.IsInstanceOfType(resultado.Model as Grupo, typeof(Grupo));
+            Assert.AreEqual(resultado.Model as Grupo, grupo);
+            Assert.AreEqual("Los plataplomo", (resultado.Model as Grupo).Nombre);
+
         }
 
         [TestMethod()]
-        public  void EditTest()
+        public void EditTest()
         {
-            var result = Gcontroller.Edit(89).Result as ViewResult;
-            Assert.IsNotNull(result);
-        }
-
-        [TestMethod()]
-        public  void EditTest1()
-        {
-
-            Grupo grupo = new Grupo() { Id = 89, Nombre = "Los Eustaquios"};
-            var aux = Gcontroller.Edit(89).Result;
-            var result = Gcontroller.Details(89).Result as ViewResult;
-            Assert.IsNotNull(result);
-        
-            Assert.IsNotNull(result.ViewData.Model);
-            Assert.IsNotNull(grupo);
-            Assert.AreEqual("Los Eustaquios", grupo.Nombre);
+            var result = Gcontroller.Edit(4).Result as ViewResult;
             Assert.IsNotNull(result);
         }
 
         [TestMethod()]
-        public  void DeleteTest()
+        public async Task EditTest1()
         {
-            var result = Gcontroller.Delete(89).Result as ViewResult;
-            Assert.IsNotNull(result);
+            var lista = (await Gcontroller.Index("", "") as ViewResult).Model as IEnumerable<Grupo>;
+            int id = lista.FirstOrDefault(x => x.Nombre.Equals("Metallica")).Id;
+
+            Grupo grupo = new Grupo();
+            grupo.Nombre = "Los plataplomo";
+
+            await Gcontroller.Edit(id, grupo);
+
+            var resultadoId = await Gcontroller.Details(id) as ViewResult;
+            Assert.IsInstanceOfType(resultadoId.Model as Grupo, typeof(Grupo));
+            Assert.AreEqual("Metallica", (resultadoId.Model as Grupo).Nombre);
+
         }
 
         [TestMethod()]
-        public  void DeleteConfirmedTest()
+        public async Task DeleteTest()
         {
-            var aux = Gcontroller.DeleteConfirmed(89).Result;
-            var result = Gcontroller.Index("", "").Result as ViewResult;
-            Assert.IsNull(result);
-         
-            Assert.IsNull(result.ViewData.Model);
-            var listaGrupos = result.ViewData.Model as List<Grupo>;
-            Assert.IsNull(listaGrupos);
-            Assert.AreEqual(5, listaGrupos.Count);
-            Assert.IsNull(result);
+
+
+            var resultado = await Gcontroller.Delete(4) as ViewResult;
+            var grupo1 = resultado.Model as Grupo;
+
+            Assert.IsInstanceOfType(grupo1, typeof(Grupo));
+            Assert.AreEqual("Violadores del Verso", grupo1.Nombre);
+
+            var lista = (await Gcontroller.Index("", "") as ViewResult).Model as IEnumerable<Grupo>;
+            int id = lista.FirstOrDefault(x => x.Nombre.Equals("Violadores del Verso")).Id;
+
+            try
+            {
+                var error = (await Gcontroller.Delete(id) as ViewResult).Model as Grupo;
+                Assert.Fail();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error capturado en Test Delete");
+            }
+        }
+
+        [TestMethod()]
+        public async Task DeleteConfirmedTest()
+        {
+            var lista = (await Gcontroller.Index("", "") as ViewResult).Model as IEnumerable<Grupo>;
+            int id = lista.FirstOrDefault(x => x.Nombre.Equals("Los plataplomo")).Id;
+
+            var resultado = await Gcontroller.Details(id) as ViewResult;
+            var grupo1 = resultado.Model as Grupo;
+
+            Assert.IsInstanceOfType(grupo1, typeof(Grupo));
+            Assert.AreEqual("Los plataplomo", grupo1.Nombre);
+
+            await Gcontroller.DeleteConfirmed(id);
+
+            try
+            {
+                var details = await Gcontroller.Details(id) as ViewResult;
+                Assert.Fail();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Error capturado en Test Delete Confirmed");
+            }
         }
     }
 }

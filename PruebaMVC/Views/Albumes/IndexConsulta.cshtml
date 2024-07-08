@@ -1,4 +1,4 @@
-﻿@model IEnumerable<PruebaMVC.Models.VistaAlbume>
+﻿@model IEnumerable<PruebaMVC.Models.Albume>
 
 @{
     ViewData["Title"] = "IndexConsulta";
@@ -15,7 +15,7 @@
         </div>
         <div class="col-1">
             <p>
-               <a class="gordete" asp-action="Create"><i class="fa-solid fa-circle-plus fs-3"></i></a>
+                <a class="gordete" asp-action="Create"><i class="fa-solid fa-circle-plus fs-3"></i></a>
             </p>
         </div>
     </div>
@@ -33,32 +33,33 @@
                 <a asp-action="IndexConsulta" asp-route-sortOrder="@ViewData["TituloSortParm"]">@Html.DisplayNameFor(model => model.Titulo)</a>
             </th>
             <th>
-                <a asp-action="IndexConsulta" asp-route-sortOrder="@ViewData["IDSortParm"]">@Html.DisplayNameFor(model => model.NombreGrupo)</a>
+                <a asp-action="IndexConsulta" asp-route-sortOrder="@ViewData["IDSortParm"]">@Html.DisplayNameFor(model => model.Grupos.Nombre)</a>
             </th>
             <th></th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Fecha)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Genero)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Titulo)
-            </td>
-            <td>
-                    @Html.DisplayFor(modelItem => item.NombreGrupo)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id"><i class="fa-solid fa-pen"></i></a> 
-                <a asp-action="Details" asp-route-id="@item.Id"><i class="fa-solid fa-eye"></i></a> 
-                <a asp-action="Delete" asp-route-id="@item.Id"><i class="fa-solid fa-trash"></i></a>
-            </td>
-        </tr>
-}
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Fecha)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Genero)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Titulo)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Grupos.Nombre)
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.Id"><i class="fa-solid fa-pen"></i></a>
+                    <a asp-action="Details" asp-route-id="@item.Id"><i class="fa-solid fa-eye"></i></a>
+                    <a asp-action="Delete" asp-route-id="@item.Id"><i class="fa-solid fa-trash"></i></a>
+                </td>
+            </tr>
+        }
     </tbody>
 </table>
