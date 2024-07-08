@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using PruebaMVC.Models;
 using PruebaMVC.Services.Repositorio;
@@ -12,14 +13,32 @@ namespace PruebaMVC.Controllers
         : Controller
     {
         // GET: Listas
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string sortOrder)
         {
+            ViewData["NombreListaSortParm"] = sortOrder == "NombreLista" ? "lista_desc" : "NombreLista";
+            ViewData["NombreUsuarioSortParm"] = sortOrder == "NombreUsuario" ? "usuario_desc" : "NombreUsuario";
+
             var grupoCContext = await context.DameTodos();
             foreach (var item in grupoCContext)
             {
                 if (item.UsuarioId != null) item.Usuario = await contextUsuario.DameUno((int)item.UsuarioId);
             }
 
+            switch (sortOrder)
+            {
+                case "lista_desc":
+                    grupoCContext = grupoCContext.OrderByDescending(s => s.Nombre).ToList();
+                    break;
+                case "NombreLista":
+                    grupoCContext = grupoCContext.OrderBy(s => s.Nombre).ToList();
+                    break;
+                case "usuario_desc":
+                    grupoCContext = grupoCContext.OrderByDescending(s => s.Usuario.Nombre).ToList();
+                    break;
+                case "NombreUsuario":
+                    grupoCContext = grupoCContext.OrderBy(s => s.Usuario.Nombre).ToList();
+                    break;
+            }
             return View(grupoCContext);
         }
 
