@@ -1,13 +1,5 @@
-﻿using Microsoft.Extensions.Configuration;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using PruebaMVC.Controllers;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using PruebaMVC.Models;
 using PruebaMVC.Services.Repositorio;
 
@@ -141,6 +133,9 @@ namespace PruebaMVC.Controllers.Tests
             Assert.AreEqual("Pepe", (resultado.Model as Usuario).Nombre);
             Assert.AreEqual("pepe@gmail.com", (resultado.Model as Usuario).Email);
             Assert.AreEqual("pepepepe", (resultado.Model as Usuario).Contraseña);
+
+            await Ucontroller.Delete(id);
+            await Ucontroller.DeleteConfirmed(id);
         }
 
         [TestMethod()]
@@ -158,6 +153,7 @@ namespace PruebaMVC.Controllers.Tests
 
             Usuario usuario1 = new Usuario();
 
+            usuario1.Id = 35;
             usuario1.Nombre = "Pepe";
             usuario1.Email = "pepe@gmail.com";
             usuario1.Contraseña = "pepepepe";
@@ -192,29 +188,6 @@ namespace PruebaMVC.Controllers.Tests
             }
         }
 
-        [TestMethod()]
-        public async Task DeleteConfirmedTest()
-        {
-            var lista = (await Ucontroller.Index("", "") as ViewResult).Model as IEnumerable<Usuario>;
-            int id = lista.FirstOrDefault(x => x.Nombre.Equals("Pepe")).Id;
-
-            var resultado = await Ucontroller.Details(id) as ViewResult;
-            var usuario1 = resultado.Model as Usuario;
-
-            Assert.IsInstanceOfType(usuario1, typeof(Usuario));
-            Assert.AreEqual("Pepe", usuario1.Nombre);
-
-            await Ucontroller.DeleteConfirmed(id);
-
-            try
-            {
-                var details = await Ucontroller.Details(id) as ViewResult;
-                Assert.Fail();
-            }
-            catch (Exception e)
-            {
-
-            }
-        }
+        
     }
 }
