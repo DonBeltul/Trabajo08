@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Configuration;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using PruebaMVC.Controllers;
@@ -154,19 +155,26 @@ namespace PruebaMVC.Controllers.Tests
         [TestMethod()]
         public async Task CreateTest()
         {
-            var contextGrupo = (await controller.getGrupoContext().DameTodos()).OrderBy(x => x.Nombre);
-            var contextConci = (await controller.getConciertoContext().DameTodos()).OrderBy(x => x.Titulo);
+            Assert.IsInstanceOfType(((await controller.Create()) as ViewResult).ViewData["ConciertosId"] as SelectList, typeof(SelectList));
+            Assert.IsInstanceOfType(((await controller.Create()) as ViewResult).ViewData["GruposId"] as SelectList, typeof(SelectList));
 
-            Assert.IsInstanceOfType(contextGrupo, typeof(IOrderedEnumerable<Grupo>));
-            Assert.IsInstanceOfType(contextConci, typeof(IOrderedEnumerable<Concierto>));
+            Assert.AreEqual(null, (((await controller.Create()) as ViewResult).ViewData["GruposId"] as SelectList).Items.GetEnumerator().Current);
+            var lista = ((controller).ViewData["GruposId"] as SelectList).Items.GetEnumerator();
+            lista.MoveNext();
+            Assert.AreEqual("AC/DC", (lista.Current as Grupo).Nombre);
+            lista.MoveNext();
+            Assert.AreEqual("Boney M.", (lista.Current as Grupo).Nombre);
+            lista.MoveNext();
+            Assert.AreEqual("Metallica", (lista.Current as Grupo).Nombre);
 
-            Assert.AreEqual("FestivalLondres", contextConci.ElementAt(0).Titulo);
-            Assert.AreEqual("FestivalMalaga", contextConci.ElementAt(1).Titulo);
-            Assert.AreEqual("FestivalParis", contextConci.ElementAt(2).Titulo);
-
-            Assert.AreEqual("AC/DC", contextGrupo.ElementAt(0).Nombre);
-            Assert.AreEqual("Boney M.", contextGrupo.ElementAt(1).Nombre);
-            Assert.AreEqual("Metallica", contextGrupo.ElementAt(2).Nombre);
+            Assert.AreEqual(null, ((controller).ViewData["ConciertosId"] as SelectList).Items.GetEnumerator().Current);
+            var conciertosLista = ((controller).ViewData["ConciertosId"] as SelectList).Items.GetEnumerator();
+            conciertosLista.MoveNext();
+            Assert.AreEqual("FestivalLondres", (conciertosLista.Current as Concierto).Titulo);
+            lista.MoveNext();
+            Assert.AreEqual("FestivalLondres", (conciertosLista.Current as Concierto).Titulo);
+            lista.MoveNext();
+            Assert.AreEqual("FestivalLondres", (conciertosLista.Current as Concierto).Titulo);
         }
 
         [TestMethod()]
@@ -178,19 +186,33 @@ namespace PruebaMVC.Controllers.Tests
             Assert.IsInstanceOfType(conciertoGrupoId1, typeof(VistaConciertosGrupo));
             Assert.AreEqual("FestivalZaragoza", conciertoGrupoId1.Titulo);
 
-            var contextGrupo = (await controller.getGrupoContext().DameTodos()).OrderBy(x => x.Nombre);
-            var contextConci = (await controller.getConciertoContext().DameTodos()).OrderBy(x => x.Titulo);
+            ConciertosGrupo objeto = new ConciertosGrupo();
+            objeto.GruposId = 2;
+            objeto.ConciertosId = 3;
+            objeto.Id = 15;
 
-            Assert.IsInstanceOfType(contextGrupo, typeof(IOrderedEnumerable<Grupo>));
-            Assert.IsInstanceOfType(contextConci, typeof(IOrderedEnumerable<Concierto>));
+            try
+            {
+                await controller.Edit(25, objeto);
+                Assert.Fail();
+            }
+            catch (Exception e)
+            {
 
-            Assert.AreEqual("FestivalLondres", contextConci.ElementAt(0).Titulo);
-            Assert.AreEqual("FestivalMalaga", contextConci.ElementAt(1).Titulo);
-            Assert.AreEqual("FestivalParis", contextConci.ElementAt(2).Titulo);
+            }
+            try
+            {
+                await controller.Edit(15, objeto);
+                Assert.Fail();
+            }
+            catch (Exception e)
+            {
 
-            Assert.AreEqual("AC/DC", contextGrupo.ElementAt(0).Nombre);
-            Assert.AreEqual("Boney M.", contextGrupo.ElementAt(1).Nombre);
-            Assert.AreEqual("Metallica", contextGrupo.ElementAt(2).Nombre);
+            }
+            ConciertosGrupo objeto2 = new ConciertosGrupo();
+            objeto.GruposId = 2;
+            objeto.ConciertosId = 3;
+            var vista = await controller.Edit(6, objeto2);
         }
 
         [TestMethod()]

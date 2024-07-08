@@ -101,20 +101,6 @@ namespace PruebaMVC.Controllers.Tests
             Assert.AreEqual("Zaragoza", (resultado.Model as VistaCancionConcierto).Lugar);
             Assert.AreEqual("FestivalZaragoza", (resultado.Model as VistaCancionConcierto).Titulo);
 
-            var contextCan = (await controller.getCancionesoContext().DameTodos()).OrderBy(x => x.Titulo);
-            var contextConci = (await controller.getConciertoContext().DameTodos()).OrderBy(x => x.Titulo);
-
-            Assert.IsInstanceOfType(contextCan, typeof(IOrderedEnumerable<Cancione>));
-            Assert.IsInstanceOfType(contextConci, typeof(IOrderedEnumerable<Concierto>));
-
-            Assert.AreEqual("FestivalLondres", contextConci.ElementAt(0).Titulo);
-            Assert.AreEqual("FestivalMalaga", contextConci.ElementAt(1).Titulo);
-            Assert.AreEqual("FestivalParis", contextConci.ElementAt(2).Titulo);
-
-            Assert.AreEqual("CancionTest", contextCan.ElementAt(0).Titulo);
-            Assert.AreEqual("Chispas", contextCan.ElementAt(1).Titulo);
-            Assert.AreEqual("Ignite", contextCan.ElementAt(2).Titulo);
-
             var concieroId1 = resultado.Model as VistaCancionConcierto;
 
             Assert.IsInstanceOfType(concieroId1, typeof(VistaCancionConcierto));
@@ -160,16 +146,27 @@ namespace PruebaMVC.Controllers.Tests
             var contextCan = (await controller.getCancionesoContext().DameTodos()).OrderBy(x => x.Titulo);
             var contextConci = (await controller.getConciertoContext().DameTodos()).OrderBy(x => x.Titulo);
 
-            Assert.IsInstanceOfType(contextCan, typeof(IOrderedEnumerable<Cancione>));
-            Assert.IsInstanceOfType(contextConci, typeof(IOrderedEnumerable<Concierto>));
+            Assert.IsInstanceOfType((await controller.Create()) as ViewResult, typeof(ViewResult));
+            Assert.IsInstanceOfType(((await controller.Create()) as ViewResult).ViewData["CancionesId"] as SelectList, typeof(SelectList));
+            Assert.IsInstanceOfType(((await controller.Create()) as ViewResult).ViewData["ConciertosId"] as SelectList, typeof(SelectList));
 
-            Assert.AreEqual("FestivalLondres", contextConci.ElementAt(0).Titulo);
-            Assert.AreEqual("FestivalMalaga", contextConci.ElementAt(1).Titulo);
-            Assert.AreEqual("FestivalParis", contextConci.ElementAt(2).Titulo);
+            Assert.AreEqual(null, (((await controller.Create()) as ViewResult).ViewData["CancionesId"] as SelectList).Items.GetEnumerator().Current);
+            var lista = ((controller).ViewData["CancionesId"] as SelectList).Items.GetEnumerator();
+            lista.MoveNext();
+            Assert.AreEqual("CancionTest", (lista.Current as Cancione).Titulo);
+            lista.MoveNext();
+            Assert.AreEqual("Chispas", (lista.Current as Cancione).Titulo);
+            lista.MoveNext();
+            Assert.AreEqual("Ignite", (lista.Current as Cancione).Titulo);
 
-            Assert.AreEqual("CancionTest", contextCan.ElementAt(0).Titulo);
-            Assert.AreEqual("Chispas", contextCan.ElementAt(1).Titulo);
-            Assert.AreEqual("Ignite", contextCan.ElementAt(2).Titulo);
+            Assert.AreEqual(null, ((controller).ViewData["ConciertosId"] as SelectList).Items.GetEnumerator().Current);
+            var conciertosLista = ((controller).ViewData["ConciertosId"] as SelectList).Items.GetEnumerator();
+            conciertosLista.MoveNext();
+            Assert.AreEqual("FestivalLondres", (conciertosLista.Current as Concierto).Titulo);
+            lista.MoveNext();
+            Assert.AreEqual("FestivalLondres", (conciertosLista.Current as Concierto).Titulo);
+            lista.MoveNext();
+            Assert.AreEqual("FestivalLondres", (conciertosLista.Current as Concierto).Titulo);
         }
 
         [TestMethod()]
@@ -181,26 +178,63 @@ namespace PruebaMVC.Controllers.Tests
             Assert.IsInstanceOfType(conciertoCancionId1, typeof(VistaCancionConcierto));
             Assert.AreEqual("FestivalZaragoza", conciertoCancionId1.Titulo);
 
-            var contextCan = (await controller.getCancionesoContext().DameTodos()).OrderBy(x => x.Titulo);
-            var contextConci = (await controller.getConciertoContext().DameTodos()).OrderBy(x => x.Titulo);
+            Assert.IsInstanceOfType(((await controller.Create()) as ViewResult).ViewData["CancionesId"] as SelectList, typeof(SelectList));
+            Assert.IsInstanceOfType(((await controller.Create()) as ViewResult).ViewData["ConciertosId"] as SelectList, typeof(SelectList));
 
-            Assert.IsInstanceOfType(contextCan, typeof(IOrderedEnumerable<Cancione>));
-            Assert.IsInstanceOfType(contextConci, typeof(IOrderedEnumerable<Concierto>));
+            Assert.AreEqual(null, (((await controller.Create()) as ViewResult).ViewData["CancionesId"] as SelectList).Items.GetEnumerator().Current);
+            var lista = ((controller).ViewData["CancionesId"] as SelectList).Items.GetEnumerator();
+            lista.MoveNext();
+            Assert.AreEqual("CancionTest", (lista.Current as Cancione).Titulo);
+            lista.MoveNext();
+            Assert.AreEqual("Chispas", (lista.Current as Cancione).Titulo);
+            lista.MoveNext();
+            Assert.AreEqual("Ignite", (lista.Current as Cancione).Titulo);
 
-            Assert.AreEqual("FestivalLondres", contextConci.ElementAt(0).Titulo);
-            Assert.AreEqual("FestivalMalaga", contextConci.ElementAt(1).Titulo);
-            Assert.AreEqual("FestivalParis", contextConci.ElementAt(2).Titulo);
+            Assert.AreEqual(null, ((controller).ViewData["ConciertosId"] as SelectList).Items.GetEnumerator().Current);
+            var conciertosLista = ((controller).ViewData["ConciertosId"] as SelectList).Items.GetEnumerator();
+            conciertosLista.MoveNext();
+            Assert.AreEqual("FestivalLondres", (conciertosLista.Current as Concierto).Titulo);
+            lista.MoveNext();
+            Assert.AreEqual("FestivalLondres", (conciertosLista.Current as Concierto).Titulo);
+            lista.MoveNext();
+            Assert.AreEqual("FestivalLondres", (conciertosLista.Current as Concierto).Titulo);
 
-            Assert.AreEqual("CancionTest", contextCan.ElementAt(0).Titulo);
-            Assert.AreEqual("Chispas", contextCan.ElementAt(1).Titulo);
-            Assert.AreEqual("Ignite", contextCan.ElementAt(2).Titulo);
+            CancionesConcierto objeto = new CancionesConcierto();
+            objeto.CancionesId = 2;
+            objeto.ConciertosId = 3;
+            objeto.Id = 15;
+
+            try
+            {
+                await controller.Edit(25, objeto);
+                Assert.Fail();
+            }
+            catch (Exception e)
+            {
+
+            }
+            try
+            {
+                await controller.Edit(15, objeto);
+                Assert.Fail();
+            }
+            catch (Exception e)
+            {
+
+            }
+            CancionesConcierto conciertoCancion = new CancionesConcierto();
+            conciertoCancion.CancionesId = 2;
+            conciertoCancion.ConciertosId = 3;
+            var vista = await controller.Edit(10, conciertoCancion);
         }
 
         [TestMethod()]
-        public void HEditTest1()
+        public async Task HEditTest1()
         {
-            var result = controller.Edit(1).Result as ViewResult;
+            var result = await controller.Edit(1) as ViewResult;
             Assert.IsNotNull(result);
+            Assert.IsInstanceOfType(result.Model as VistaCancionConcierto, typeof(VistaCancionConcierto));
+            Assert.AreEqual("Take Over", (result.Model as VistaCancionConcierto).TituloCanciones);
         }
 
         [TestMethod()]
