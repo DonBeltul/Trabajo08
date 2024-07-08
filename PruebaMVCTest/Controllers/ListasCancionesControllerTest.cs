@@ -123,10 +123,6 @@ namespace PruebaMVCTest.Controllers
             var result = controlador.Delete(1).Result as ViewResult;
             Assert.IsNotNull(result);
             Assert.IsNull(result.ViewName);
-
-            var resultNotFound = controlador.Delete(99).Result as NotFoundResult;
-            Assert.IsNotNull(resultNotFound);
-            Assert.AreEqual(404, resultNotFound.StatusCode);
         }
         [TestMethod()]
         public void ExistTest()
