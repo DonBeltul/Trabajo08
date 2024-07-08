@@ -85,10 +85,15 @@ namespace PruebaMVC.Controllers.Tests
             var artista = resultado.ViewData.Model as Artista;
             Assert.IsNotNull(artista);
             Assert.AreEqual("Artista3", artista.Nombre);
-            
+
+            artista.Nombre = "Artista 3 Modificado";
+            await _controlador.Edit(3, artista, null);
+            var artistaMod = contexto.Artistas.FirstOrDefault(x => x.Nombre == "Artista 3 Modificado");
+            Assert.IsNotNull(artistaMod);
+
         }
         [TestMethod()]
-        public async Task DEditTestVolver()
+        public async Task EEditTestVolver()
         {
             var resultado = await _controlador.Details(3) as ViewResult;
             var artista = contexto.Artistas.FirstOrDefault(x => x.Nombre == "Artista 3 Modificado");
@@ -102,7 +107,7 @@ namespace PruebaMVC.Controllers.Tests
         }
 
         [TestMethod()]
-        public async Task EDeleteTest()
+        public async Task FDeleteTest()
         {
 
             var ArtistaEliminar = await contexto.Artistas.FirstOrDefaultAsync(x => x.Nombre == "Artista6");
